@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:match_up/constant/colors.dart';
 import 'package:match_up/firebase_options.dart';
 import 'package:match_up/ui/map/map_page.dart';
 
@@ -25,7 +24,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Match-up',
-      theme: ThemeData(),
+      theme: ThemeData(
+        fontFamily: 'Pretendard',
+      ),
       home: const MyHomePage(),
     );
   }
