@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:match_up/constant/colors.dart';
+import 'package:match_up/ui/login/%08widgets/custom_social_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -95,81 +96,37 @@ class _LoginPageState extends State<LoginPage>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            textStyle: TextStyle(fontSize: 18),
-                            backgroundColor: AppColors.white,
-                            minimumSize: Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            foregroundColor: AppColors.black),
+                      CustomSocialButton(
                         onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(
-                              "assets/images/google_icon.png",
-                              width: 20,
-                              height: 20,
-                            ),
-                            Text("구글로 시작하기"),
-                            SizedBox(
-                              width: 24,
-                            ),
-                          ],
-                        ),
+                        text: "구글로 시작하기",
+                        backgroundColor: AppColors.white,
+                        textColor: AppColors.black,
+                        iconPath: "assets/images/google_icon.png",
+                        iconSize: 20,
                       ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            textStyle: TextStyle(fontSize: 18),
-                            backgroundColor: AppColors.naverGreen,
-                            minimumSize: Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            foregroundColor: AppColors.white),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomSocialButton(
                         onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(
-                              "assets/images/naver_icon.png",
-                              width: 24,
-                              height: 24,
-                            ),
-                            Text("네이버로 시작하기"),
-                            SizedBox(
-                              width: 24,
-                            ),
-                          ],
-                        ),
+                        text: "네이버로 시작하기",
+                        backgroundColor: AppColors.naverGreen,
+                        textColor: AppColors.white,
+                        iconPath: "assets/images/naver_icon.png",
                       ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            textStyle: TextStyle(fontSize: 18),
-                            backgroundColor: AppColors.kakaoYellow,
-                            minimumSize: Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            foregroundColor: AppColors.black),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomSocialButton(
                         onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(
-                              "assets/images/kakao_icon.png",
-                              width: 24,
-                              height: 24,
-                            ),
-                            Text("카카오로 시작하기"),
-                            SizedBox(
-                              width: 24,
-                            ),
-                          ],
-                        ),
+                        text: "카카오로 시작하기",
+                        backgroundColor: AppColors.kakaoYellow,
+                        textColor: AppColors.black,
+                        iconPath: "assets/images/kakao_icon.png",
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(
+                        height: 20,
+                      ),
                     ],
                   ),
                 ),
