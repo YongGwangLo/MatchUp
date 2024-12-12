@@ -1,14 +1,24 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/constant/categories.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
+import 'package:match_up/ui/mypage/mypage_page.dart';
 
-class MapPage extends StatelessWidget {
+class MapPage extends StatefulWidget {
   const MapPage({super.key});
 
+  @override
+  State<MapPage> createState() => _MapPageState();
+}
+
+class _MapPageState extends State<MapPage> {
+  var _index = 0;
+  List<Widget> _pages = [
+    MapPage(),
+    MypagePage(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,11 +183,18 @@ class MapPage extends StatelessWidget {
               )),
         ],
       ),
-      bottomNavigationBar:
-          BottomNavigationBar(selectedItemColor: AppColors.purple, items: [
-        BottomNavigationBarItem(icon: Icon(Icons.map), label: '지도보기'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
-      ]),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: AppColors.purple,
+        // currentIndex: ,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: '지도보기'),
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.person), label: '마이페이지'),
+        ],
+        onTap: (index) {
+          // _pageController.jumpToPage
+        },
+      ),
     );
   }
 
