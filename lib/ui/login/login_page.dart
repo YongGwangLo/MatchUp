@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/ui/login/%08widgets/custom_social_button.dart';
 
@@ -14,6 +15,15 @@ class _LoginPageState extends State<LoginPage>
   late AnimationController _controller;
   late Animation<Color?> _gradientColor1;
   late Animation<Color?> _gradientColor2;
+  GoogleSignInAccount? googleAccount;
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    GoogleSignIn googleSignIn = GoogleSignIn();
+    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    setState(() {
+      googleAccount = googleUser;
+    });
+  }
 
   @override
   void initState() {
@@ -43,6 +53,8 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    print(googleAccount);
+    // OIDC
     return Scaffold(
       body: AnimatedBuilder(
         animation: _controller,
@@ -97,32 +109,14 @@ class _LoginPageState extends State<LoginPage>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CustomSocialButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          signInWithGoogle(context);
+                        },
                         text: "구글로 시작하기",
                         backgroundColor: AppColors.white,
                         textColor: AppColors.black,
                         iconPath: "assets/images/google_icon.png",
                         iconSize: 20,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CustomSocialButton(
-                        onPressed: () {},
-                        text: "네이버로 시작하기",
-                        backgroundColor: AppColors.naverGreen,
-                        textColor: AppColors.white,
-                        iconPath: "assets/images/naver_icon.png",
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CustomSocialButton(
-                        onPressed: () {},
-                        text: "카카오로 시작하기",
-                        backgroundColor: AppColors.kakaoYellow,
-                        textColor: AppColors.black,
-                        iconPath: "assets/images/kakao_icon.png",
                       ),
                       SizedBox(
                         height: 20,
