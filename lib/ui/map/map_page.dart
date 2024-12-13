@@ -4,6 +4,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/constant/categories.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
+import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/mypage/mypage_page.dart';
 
 class MapPage extends StatefulWidget {
@@ -34,7 +35,7 @@ class _MapPageState extends State<MapPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return ChatSubmitPage();
+                    return ChatPage();
                   },
                 ),
               );
