@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,6 +9,8 @@ import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/chat/chat_update.dart';
 import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
+import 'package:match_up/ui/login/login_page.dart';
+import 'package:match_up/ui/login/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
