@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:match_up/constant/colors.dart';
 
 class SendMessage extends StatelessWidget {
+  final String name;
+  final String profile;
+  final bool showProfile;
+  final String message;
+  final DateTime dateTime;
+
+  const SendMessage({
+    super.key,
+    required this.name,
+    required this.profile,
+    required this.showProfile,
+    required this.message,
+    required this.dateTime,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -10,7 +24,7 @@ class SendMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              '김대성',
+              name,
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 14,
@@ -21,15 +35,15 @@ class SendMessage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               height: 30,
               decoration: BoxDecoration(
-                color: AppColors.purple,
+                color: AppColors.lightGray,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  '안녕하십니까?',
+                  message,
                   style: TextStyle(
-                    color: AppColors.white,
+                    color: AppColors.black,
                     fontSize: 14,
                   ),
                 ),
@@ -37,7 +51,7 @@ class SendMessage extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              '2024년 12월 11일 (수) 12:22',
+              dateTime.toIso8601String(),
               style: TextStyle(
                 color: AppColors.darkGray,
                 fontSize: 12,
@@ -45,7 +59,7 @@ class SendMessage extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(width: 4),
+        SizedBox(width: 8),
         Container(
           width: 40,
           height: 40,
@@ -53,8 +67,10 @@ class SendMessage extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             color: AppColors.lightGray,
           ),
-          child: ClipRRect(
-            child: Icon(Icons.person, size: 24),
+          child: ClipOval(
+            child: (showProfile == false)
+                ? Icon(Icons.person, size: 24)
+                : Image.network(profile, fit: BoxFit.cover),
           ),
         ),
       ],

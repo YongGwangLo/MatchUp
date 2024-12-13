@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:match_up/constant/colors.dart';
 
 class ReciveMessage extends StatelessWidget {
-  // final String profile;
-  // final bool showProfile;
-  // final String content;
-  // final DateTime dateTime;
+  final String name;
+  final String profile;
+  final bool showProfile;
+  final String message;
+  final DateTime dateTime;
 
-  // const ReciveMessage({
-  //   super.key,
-  //   required this.profile,
-  //   required this.showProfile,
-  //   required this.message,
-  //   required this.dateTime,
-  // });
+  const ReciveMessage({
+    super.key,
+    required this.name,
+    required this.profile,
+    required this.showProfile,
+    required this.message,
+    required this.dateTime,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -25,8 +27,10 @@ class ReciveMessage extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             color: AppColors.lightGray,
           ),
-          child: ClipRRect(
-            child: Icon(Icons.person, size: 24),
+          child: ClipOval(
+            child: (showProfile == false)
+                ? Icon(Icons.person, size: 24)
+                : Image.network(profile, fit: BoxFit.cover),
           ),
         ),
         SizedBox(width: 8),
@@ -34,7 +38,7 @@ class ReciveMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '김대성',
+              name,
               style: TextStyle(
                 color: AppColors.black,
                 fontSize: 14,
@@ -51,7 +55,7 @@ class ReciveMessage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  '안녕하십니까?',
+                  message,
                   style: TextStyle(
                     color: AppColors.black,
                     fontSize: 14,
@@ -61,7 +65,7 @@ class ReciveMessage extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              '2024년 12월 11일 (수) 12:22',
+              dateTime.toIso8601String(),
               style: TextStyle(
                 color: AppColors.darkGray,
                 fontSize: 12,
