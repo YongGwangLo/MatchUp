@@ -7,6 +7,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/firebase_options.dart';
+import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
+import 'package:match_up/ui/chat/chat_page.dart';
+import 'package:match_up/ui/chat_update/chat_update.dart';
+import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
 
 void main() async {
@@ -27,6 +31,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/Chat_Update': (context) => ChatUpdate(),
+        '/Chat_Page': (context) => ChatPage(),
+        '/Chat_Submit': (context) => ChatSubmitPage(),
+        '/Login': (context) => LoginPage(),
+        '/Map': (context) => MapPage(),
+      },
       title: 'Match-up',
       theme: ThemeData(
         fontFamily: 'Pretendard',
