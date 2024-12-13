@@ -1,24 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/constant/categories.dart';
+import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
+import 'package:match_up/ui/map/map_page_view_model.dart';
+import 'package:match_up/ui/map/widgets/bottom_navigation_bar.dart';
 import 'package:match_up/ui/mypage/mypage_page.dart';
 
-class MapPage extends StatefulWidget {
+class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  ConsumerState<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
-  var _index = 0;
-  List<Widget> _pages = [
-    MapPage(),
-    MypagePage(),
-  ];
+class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +52,17 @@ class _MapPageState extends State<MapPage> {
       ),
       body: Stack(
         children: [
-          NaverMap(),
+          NaverMap(
+            onMapReady: (controller) {
+              final mapState = ref.watch(mapPageViewModel);
+              for (var chatRoom in mapState) {
+                //chatRoom
+                //TODO 위도 경도 chatRoom에서 받아서 넣기
+                final marker = NMarker(id: '1', position: NLatLng(0, 0));
+              }
+            },
+            options: NaverMapViewOptions(),
+          ),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -183,18 +192,7 @@ class _MapPageState extends State<MapPage> {
               )),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: AppColors.purple,
-        // currentIndex: ,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: '지도보기'),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person), label: '마이페이지'),
-        ],
-        onTap: (index) {
-          // _pageController.jumpToPage
-        },
-      ),
+      bottomNavigationBar: HomeBottomNavigationBar(),
     );
   }
 

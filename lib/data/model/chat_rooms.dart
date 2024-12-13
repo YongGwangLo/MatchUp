@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:match_up/data/model/joined_user.dart';
 
-class ChatRooms {
+class ChatRoom {
   final String address;
   final String category;
   final String createdUserId;
@@ -10,7 +10,7 @@ class ChatRooms {
   final List<JoinedUser> joinedUsers;
   final String title;
 
-  ChatRooms(
+  ChatRoom(
       {required this.address,
       required this.category,
       required this.createdUserId,
@@ -19,7 +19,7 @@ class ChatRooms {
       required this.joinedUsers,
       required this.title});
 
-  ChatRooms.fromJson(Map<String, dynamic> map)
+  ChatRoom.fromJson(Map<String, dynamic> map)
       : this(
             address: map['address'],
             category: map['category'],
