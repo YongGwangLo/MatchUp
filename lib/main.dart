@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/firebase_options.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
 import 'package:match_up/ui/chat/chat_page.dart';
-import 'package:match_up/ui/chat_update/chat_update.dart';
+import 'package:match_up/ui/chat/chat_update.dart';
 import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
 

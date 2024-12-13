@@ -11,7 +11,7 @@ class ReciveMessage extends StatelessWidget {
   //   super.key,
   //   required this.profile,
   //   required this.showProfile,
-  //   required this.content,
+  //   required this.message,
   //   required this.dateTime,
   // });
   @override

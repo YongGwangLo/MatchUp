@@ -57,35 +57,42 @@ class ChatPage extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                      decoration: InputDecoration(
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 45,
+                      child: TextFormField(
+                        decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: AppColors.lightGray,
-                                width: 1,
-                              )))),
-                ),
-                SizedBox(width: 10),
-                Container(
-                  width: 40,
-                  height: 40,
-                  color: Colors.transparent,
-                  child: Icon(
-                    Icons.send,
-                    color: AppColors.purple,
-                    size: 32,
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: AppColors.lightGray,
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(width: 10),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    color: Colors.transparent,
+                    child: Icon(
+                      Icons.send,
+                      color: AppColors.purple,
+                      size: 32,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 40),
         ],
       ),
     );
