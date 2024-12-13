@@ -31,20 +31,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/Chat_Update': (context) => ChatUpdate(),
-        '/Chat_Page': (context) => ChatPage(),
-        '/Chat_Submit': (context) => ChatSubmitPage(),
-        '/Login': (context) => LoginPage(),
-        '/Map': (context) => MapPage(),
-      },
-      title: 'Match-up',
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
-      ),
-      home: const MyHomePage(),
-    );
+        initialRoute: '/',
+        routes: {
+          '/Chat_Update': (context) => ChatUpdate(),
+          '/Chat_Page': (context) => ChatPage(),
+          '/Chat_Submit': (context) => ChatSubmitPage(),
+          '/Login': (context) => LoginPage(),
+          '/Map': (context) => MapPage(),
+        },
+        title: 'Match-up',
+        theme: ThemeData(
+          fontFamily: 'Pretendard',
+        ),
+        home: const LoginPage());
   }
 }
 
