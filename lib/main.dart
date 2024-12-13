@@ -33,35 +33,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         initialRoute: '/',
         routes: {
-          '/Chat_Update': (context) => ChatUpdate(),
-          '/Chat_Page': (context) => ChatPage(),
-          '/Chat_Submit': (context) => ChatSubmitPage(),
-          '/Login': (context) => LoginPage(),
-          '/Map': (context) => MapPage(),
+          '/chat_update': (context) => ChatUpdate(),
+          '/chat_page': (context) => ChatPage(),
+          '/chat_submit': (context) => ChatSubmitPage(),
+          '/login': (context) => LoginPage(),
+          '/map': (context) => MapPage(),
         },
         title: 'Match-up',
         theme: ThemeData(
           fontFamily: 'Pretendard',
         ),
         home: const LoginPage());
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     dotenv.env["TEST"] ??
-      //         "", // TODO :.env 파일을 최상위 디렉토리에 추가하고 TEST=sample 입력해서 잘 나오는지 확인해주세요
-      //     style: TextStyle(
-      //         color: AppColors.purple), // TODO : AppColors를 임포트 해서 컬러 사용해 주세요.
-      //   ),
-      // ),
-      body: MapPage(),
-    );
   }
 }
