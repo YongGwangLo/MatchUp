@@ -8,6 +8,7 @@ import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
 import 'package:match_up/ui/map/map_page_view_model.dart';
 import 'package:match_up/ui/map/widgets/bottom_navigation_bar.dart';
+import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/mypage/mypage_page.dart';
 
 class MapPage extends ConsumerStatefulWidget {
@@ -33,7 +34,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return ChatSubmitPage();
+                    return ChatPage();
                   },
                 ),
               );
