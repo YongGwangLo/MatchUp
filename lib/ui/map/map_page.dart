@@ -57,8 +57,14 @@ class _MapPageState extends ConsumerState<MapPage> {
               final mapState = ref.watch(mapPageViewModel);
               for (var chatRoom in mapState) {
                 //chatRoom
-                //TODO 위도 경도 chatRoom에서 받아서 넣기
-                final marker = NMarker(id: '1', position: NLatLng(0, 0));
+                //TODO id, 위도 경도 chatRoom에서 받아서 넣기
+                final marker = NMarker(
+                    id: chatRoom.createdUserId,
+                    position: NLatLng(
+                      chatRoom.geoPoint.latitude,
+                      chatRoom.geoPoint.longitude,
+                    ));
+                controller.addOverlay(marker);
               }
             },
             options: NaverMapViewOptions(),
