@@ -21,6 +21,8 @@ class MapPage extends ConsumerStatefulWidget {
 class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
+    final mapState = ref.watch(mapPageViewModel);
+    final vm = ref.watch(mapPageViewModel.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -30,14 +32,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ChatPage();
-                  },
-                ),
-              );
+              Navigator.pushNamed(context, '/Chat_Update');
             },
             child: Container(
               height: 50,
@@ -53,23 +48,42 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       body: Stack(
         children: [
-          NaverMap(
-            onMapReady: (controller) {
-              final mapState = ref.watch(mapPageViewModel);
-              for (var chatRoom in mapState) {
-                //chatRoom
-                //TODO id, 위도 경도 chatRoom에서 받아서 넣기
-                final marker = NMarker(
-                    id: chatRoom.createdUserId,
-                    position: NLatLng(
-                      chatRoom.geoPoint.latitude,
-                      chatRoom.geoPoint.longitude,
-                    ));
-                controller.addOverlay(marker);
-              }
-            },
-            options: NaverMapViewOptions(),
-          ),
+          mapState.isNotEmpty
+              ? NaverMap(
+                  onMapReady: (controller) {
+                    //TODO 유저 주소 등록
+                    vm.getChatRooms('서울특별시 서초구 잠원동');
+                    print(mapState.length);
+                    for (var chatRoom in mapState) {
+                      //chatRoom
+                      //TODO id, 위도 경도 chatRoom에서 받아서 넣기
+                      final marker = NMarker(
+                          id: chatRoom.createdUserId,
+                          position: NLatLng(
+                            chatRoom.geoPoint.latitude,
+                            chatRoom.geoPoint.longitude,
+                          ));
+                      controller.addOverlay(marker);
+                      final infoWindow = NInfoWindow.onMap(
+                          id: chatRoom.createdUserId,
+                          //TODO chatRoom id 고유 id로 변경.
+                          text: chatRoom.category,
+                          position: NLatLng(
+                            chatRoom.geoPoint.latitude,
+                            chatRoom.geoPoint.longitude,
+                          ));
+
+                      controller.addOverlay(infoWindow);
+                    }
+                  },
+                  options: NaverMapViewOptions(
+                      initialCameraPosition:
+                          //TODO user address
+                          NCameraPosition(
+                              target: NLatLng(37.506494, 127.012474),
+                              zoom: 15)),
+                )
+              : SizedBox(),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
