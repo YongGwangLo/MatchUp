@@ -2,10 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:match_up/data/model/chat.dart';
 
-// 채팅 데이터 상태를 관리하는 ViewModel
 final chatViewModelProvider = StateNotifierProvider<ChatViewModel, List<Chat>>(
   (ref) => ChatViewModel(),
 );
+
+final currentUserProvider = FutureProvider<Map<String, String>>((ref) async {
+  return {
+    'userId': 'imsi',
+    'userImg': 'https://picsum.photos/200/300',
+    'userName': 'mmm',
+  };
+});
 
 class ChatViewModel extends StateNotifier<List<Chat>> {
   ChatViewModel() : super([]) {
@@ -13,23 +20,35 @@ class ChatViewModel extends StateNotifier<List<Chat>> {
   }
 
   final _firestore = FirebaseFirestore.instance;
+  final String _chatRoomId = 'JGQel7KnD8aAYom4Zqbn';
 
-  // 실시간 채팅
   void _listenToChats() {
-    _firestore
-        .collection('messages')
-        .orderBy('time_stamp', descending: false)
-        .snapshots()
-        .listen(
-      (snapshot) {
-        state = snapshot.docs
-            .map((doc) => Chat.fromJson(doc.data(), doc.id))
-            .toList();
-      },
-    );
+    try {
+      _firestore
+          .collection('chat_rooms')
+          .doc(_chatRoomId)
+          .collection('messages')
+          .orderBy('time_stamp', descending: false)
+          .snapshots()
+          .listen(
+        (snapshot) {
+          if (!snapshot.metadata.isFromCache) {
+            state = snapshot.docs
+                .map((doc) => Chat.fromJson(doc.data(), doc.id))
+                .toList()
+                .reversed
+                .toList();
+          }
+        },
+        onError: (error) {
+          print('Error listening to messages: $error');
+        },
+      );
+    } catch (e) {
+      print('Error in _listenToChats: $e');
+    }
   }
 
-  // 새 채팅 메시지를 Firestore에 전송
   Future<void> sendMessage({
     required String content,
     required String userId,
@@ -45,9 +64,13 @@ class ChatViewModel extends StateNotifier<List<Chat>> {
         userName: userName,
       );
 
-      await _firestore.collection('messages').add(chat.toJson());
+      await _firestore
+          .collection('chat_rooms')
+          .doc(_chatRoomId)
+          .collection('messages')
+          .add(chat.toJson());
     } catch (e) {
-      print('$e');
+      print('Error sending message: $e');
     }
   }
 }
