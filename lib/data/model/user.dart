@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
+class UserModel {
   final String uid;
   final String name;
   final String nickname;
@@ -10,7 +10,7 @@ class User {
   final List<String> joinedRooms;
   final String address;
 
-  User({
+  UserModel({
     required this.uid,
     required this.name,
     required this.nickname,
@@ -21,9 +21,9 @@ class User {
     required this.address,
   });
 
-  factory User.fromFirestore(DocumentSnapshot doc) {
+  factory UserModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return User(
+    return UserModel(
       uid: doc.id,
       name: data['name'],
       nickname: data['nickname'],
