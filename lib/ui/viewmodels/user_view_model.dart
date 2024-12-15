@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:match_up/data/model/user.dart';
 import 'package:match_up/data/repository/user_repository.dart';
+import 'package:match_up/data/repository/vworld_repository.dart';
 
 class UserState {
   UserState({
@@ -90,7 +91,7 @@ class UserViewModel extends Notifier<UserState> {
                   name: user.displayName ?? "",
                   nickname: "",
                   img: user.photoURL ?? "",
-                  geoPoint: const GeoPoint(0, 0),
+                  geoPoint: GeoPoint(0, 0),
                   createdRooms: [],
                   joinedRooms: [],
                   address: ""),
@@ -102,6 +103,48 @@ class UserViewModel extends Notifier<UserState> {
       }
     } catch (e) {
       state = state.copyWith(user: null, isLoading: false, isError: true);
+    }
+  }
+
+  Future<void> updateUserLocation(double latitude, double longitude) async {
+    VworldRepository vworldRepository = VworldRepository();
+    final user = state.user;
+    if (user != null) {
+      final geoPoint = GeoPoint(latitude, longitude);
+      final address =
+          await vworldRepository.findByLatLng(lat: latitude, lng: longitude);
+      state = state.copyWith(
+        user: user.copyWith(address: address[0], geoPoint: geoPoint),
+      );
+    }
+  }
+
+  Future<void> updateUserNickname(String newNickname) async {
+    final user = state.user;
+    if (user != null) {
+      state = state.copyWith(
+        user: user.copyWith(nickname: newNickname),
+      );
+    }
+  }
+
+  Future<void> submitUserToFirestore() async {
+    final user = state.user;
+    if (user != null) {
+      try {
+        UserRepository userRepository = UserRepository();
+        await userRepository.saveUser(user);
+
+        state = state.copyWith(
+          isNewUser: false,
+          isLoading: false,
+        );
+      } catch (e) {
+        state = state.copyWith(
+          isLoading: false,
+          isError: true,
+        );
+      }
     }
   }
 }
