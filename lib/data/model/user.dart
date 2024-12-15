@@ -46,4 +46,26 @@ class UserModel {
       'address': address,
     };
   }
+
+  UserModel copyWith({
+    String? uid,
+    String? name,
+    String? nickname,
+    String? img,
+    GeoPoint? geoPoint,
+    List<String>? createdRooms,
+    List<String>? joinedRooms,
+    String? address,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      nickname: nickname ?? this.nickname,
+      img: img ?? this.img,
+      geoPoint: geoPoint ?? this.geoPoint,
+      createdRooms: createdRooms ?? this.createdRooms,
+      joinedRooms: joinedRooms ?? this.joinedRooms,
+      address: address ?? this.address,
+    );
+  }
 }
