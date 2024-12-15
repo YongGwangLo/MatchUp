@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
-import 'package:match_up/ui/chat/chat_page_view_model.dart';
+import 'package:match_up/data/model/chat.dart';
 import 'package:match_up/ui/chat/widgets/app_bar.dart';
 import 'package:match_up/ui/chat/widgets/chat_page_body.dart';
 import 'package:match_up/ui/chat/widgets/chat_page_information.dart';
 import 'package:match_up/ui/chat/widgets/recive_message.dart';
 import 'package:match_up/ui/chat/widgets/send_message.dart';
 
-class ChatPage extends ConsumerWidget {
-  ChatPage({
-    super.key,
-    required this.userId,
-    required this.userImg,
-    required this.userName,
-  });
-
-  final TextEditingController messageController = TextEditingController();
-  final String userId;
-  final String userImg;
-  final String userName;
+class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final chats = ref.watch(chatViewModelProvider);
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context),
       body: Column(
@@ -31,10 +32,12 @@ class ChatPage extends ConsumerWidget {
           ChatPageInformation(),
           Divider(),
           Expanded(
-            child: ListView.builder(
-              itemCount: chats.length,
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              itemCount: 10,
+              separatorBuilder: (context, index) => SizedBox(width: 4),
               itemBuilder: (context, index) {
-                return ChatPageBody(chat: chats[index]);
+                return ChatPageBody(chat: Chat, isMe: true);
               },
             ),
           ),
