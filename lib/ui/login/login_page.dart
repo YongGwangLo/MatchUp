@@ -96,8 +96,35 @@ class LoginPageState extends State<LoginPage>
                   padding: const EdgeInsets.only(bottom: 20),
                   child: Consumer(
                     builder: (context, ref, child) {
+                      final userState = ref.watch(userViewModelProvider);
                       final userViewModel =
                           ref.read(userViewModelProvider.notifier);
+
+                      if (userState.isLoading) {
+                        return Center(
+                          child:
+                              CircularProgressIndicator(color: AppColors.white),
+                        );
+                      }
+
+                      if (userState.isError) {
+                        Future.delayed(Duration.zero, () {
+                          // build보다 먼저 나온다고 에러가 나올때 해결법, UI가 랜더링 된 이후에
+                          // snackBar가 나올수 있도록 보장하기 위한 delay
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Center(
+                                child: Text(
+                                  '로그인에 실패했습니다. 다시 시도해 주세요.',
+                                  style: TextStyle(color: AppColors.white),
+                                ),
+                              ),
+                              backgroundColor: AppColors.onError,
+                            ),
+                          );
+                        });
+                      }
+
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
