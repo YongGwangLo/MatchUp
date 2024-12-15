@@ -13,7 +13,7 @@ class Chat {
     required this.userName,
   });
 
-  Chat.fromJson(Map<String, dynamic> map)
+  Chat.fromJson(Map<String, dynamic> map, String id)
       : this(
           content: map['content'],
           timeStamp: DateTime.parse(map['time_stamp']),

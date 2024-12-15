@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
+import 'package:match_up/ui/chat/chat_page_view_model.dart';
 import 'package:match_up/ui/chat/widgets/app_bar.dart';
+import 'package:match_up/ui/chat/widgets/chat_page_body.dart';
 import 'package:match_up/ui/chat/widgets/chat_page_information.dart';
 import 'package:match_up/ui/chat/widgets/recive_message.dart';
 import 'package:match_up/ui/chat/widgets/send_message.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+class ChatPage extends ConsumerWidget {
+  ChatPage({
+    super.key,
+    required this.userId,
+    required this.userImg,
+    required this.userName,
+  });
+
+  final TextEditingController messageController = TextEditingController();
+  final String userId;
+  final String userImg;
+  final String userName;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chats = ref.watch(chatViewModelProvider);
     return Scaffold(
       appBar: appBar(context),
       body: Column(
@@ -17,24 +31,11 @@ class ChatPage extends StatelessWidget {
           ChatPageInformation(),
           Divider(),
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                ReciveMessage(
-                  name: '김대성',
-                  profile: 'https://picsum.photos/200/300',
-                  showProfile: true,
-                  message: '안녕하십니까?',
-                  dateTime: DateTime.now(),
-                ),
-                SendMessage(
-                  name: '목진성',
-                  profile: 'https://picsum.photos/200/300',
-                  showProfile: true,
-                  message: '네 안녕하세요 !',
-                  dateTime: DateTime.now(),
-                ),
-              ],
+            child: ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (context, index) {
+                return ChatPageBody(chat: chats[index]);
+              },
             ),
           ),
           SafeArea(
