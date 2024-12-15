@@ -1,29 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/ui/login/%08widgets/custom_social_button.dart';
+import 'package:match_up/ui/viewModels/user_view_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
+class LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> _gradientColor1;
   late Animation<Color?> _gradientColor2;
-  GoogleSignInAccount? googleAccount;
-
-  Future<void> signInWithGoogle(BuildContext context) async {
-    GoogleSignIn googleSignIn = GoogleSignIn();
-    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-    setState(() {
-      googleAccount = googleUser;
-    });
-  }
 
   @override
   void initState() {
@@ -53,8 +45,6 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
-    print(googleAccount);
-    // OIDC
     return Scaffold(
       body: AnimatedBuilder(
         animation: _controller,
@@ -76,7 +66,6 @@ class _LoginPageState extends State<LoginPage>
           padding: const EdgeInsets.all(16.0),
           child: Stack(
             children: [
-              // 중앙 텍스트
               Center(
                 child: Transform.translate(
                   offset: Offset(0, -50),
@@ -105,23 +94,29 @@ class _LoginPageState extends State<LoginPage>
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CustomSocialButton(
-                        onPressed: () {
-                          signInWithGoogle(context);
-                        },
-                        text: "구글로 시작하기",
-                        backgroundColor: AppColors.white,
-                        textColor: AppColors.black,
-                        iconPath: "assets/images/google_icon.png",
-                        iconSize: 20,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final userViewModel =
+                          ref.read(userViewModelProvider.notifier);
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomSocialButton(
+                            onPressed: () async {
+                              userViewModel.signInWithGoogle();
+                            },
+                            text: "구글로 시작하기",
+                            backgroundColor: AppColors.white,
+                            textColor: AppColors.black,
+                            iconPath: "assets/images/google_icon.png",
+                            iconSize: 20,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
