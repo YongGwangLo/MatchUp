@@ -16,20 +16,20 @@ class ChatPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          if (isMe) ...[
+          if (isMe)
             SendMessage(
               name: chat.userName,
               profile: chat.userImg,
               showProfile: true,
               message: chat.content,
               dateTime: chat.timeStamp,
-            ),
-          ] else ...[
+            )
+          else
             ReciveMessage(
               name: chat.userName,
               profile: chat.userImg,
@@ -37,7 +37,6 @@ class ChatPageBody extends StatelessWidget {
               message: chat.content,
               dateTime: chat.timeStamp,
             ),
-          ],
         ],
       ),
     );

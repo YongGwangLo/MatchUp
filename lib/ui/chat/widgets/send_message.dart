@@ -35,7 +35,7 @@ class SendMessage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               height: 30,
               decoration: BoxDecoration(
-                color: AppColors.lightGray,
+                color: AppColors.purple,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Align(
@@ -43,7 +43,7 @@ class SendMessage extends StatelessWidget {
                 child: Text(
                   message,
                   style: TextStyle(
-                    color: AppColors.black,
+                    color: AppColors.white,
                     fontSize: 14,
                   ),
                 ),
