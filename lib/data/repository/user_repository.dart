@@ -4,15 +4,15 @@ import 'package:match_up/data/model/user.dart';
 class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> fetchUser(String uid) async {
+  Future<UserModel?> fetchUser(String uid) async {
     final doc = await _firestore.collection('users').doc(uid).get();
     if (doc.exists) {
-      return User.fromFirestore(doc);
+      return UserModel.fromFirestore(doc);
     }
     return null;
   }
 
-  Future<void> saveUser(User user) async {
+  Future<void> saveUser(UserModel user) async {
     await _firestore.collection('users').doc(user.uid).set(user.toJson());
   }
 }
