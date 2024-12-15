@@ -9,8 +9,8 @@ import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/chat/chat_update.dart';
 import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
-import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/login/register_page.dart';
+import 'package:match_up/ui/viewModels/user_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,24 +24,36 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userViewModelProvider);
+
     return MaterialApp(
-        initialRoute: '/',
         routes: {
           '/chat_update': (context) => ChatUpdate(),
           '/chat_page': (context) => ChatPage(),
           '/chat_submit': (context) => ChatSubmitPage(),
           '/login': (context) => LoginPage(),
           '/map': (context) => MapPage(),
+          '/resigter': (context) => RegisterPage()
         },
         title: 'Match-up',
         theme: ThemeData(
           fontFamily: 'Pretendard',
         ),
-        home: const LoginPage());
+        home: _getHome(userState));
+  }
+
+  Widget _getHome(UserState userState) {
+    if (userState.user == null) {
+      return const LoginPage();
+    } else if (userState.isNewUser) {
+      return const RegisterPage();
+    } else {
+      return const MapPage();
+    }
   }
 }
