@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:match_up/constant/colors.dart';
+import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/ui/chat/widgets/app_bar.dart';
 import 'package:match_up/ui/chat/widgets/chat_page_body.dart';
 import 'package:match_up/ui/chat/widgets/chat_page_information.dart';
@@ -7,8 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/ui/chat/chat_page_view_model.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
-  const ChatPage({super.key});
-
+  const ChatPage({super.key, this.selectedChatRoom});
+  final ChatRoom? selectedChatRoom;
+  //selectedChatRoom.id
   @override
   ConsumerState<ChatPage> createState() => _ChatPageState();
 }
