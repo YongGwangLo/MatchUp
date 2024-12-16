@@ -21,6 +21,16 @@ class MapPage extends ConsumerStatefulWidget {
 class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
+    final mapState = ref.watch(mapPageViewModel);
+    final vm = ref.watch(mapPageViewModel.notifier);
+    String selectedId = '';
+    // print(mapState.length);
+
+    void onSelected(String id) {
+      selectedId = id;
+      vm.chatRoomsRepository;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -30,14 +40,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ChatPage();
-                  },
-                ),
-              );
+              Navigator.pushNamed(context, '/Chat_Update');
             },
             child: Container(
               height: 50,
@@ -53,23 +56,42 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       body: Stack(
         children: [
-          NaverMap(
-            onMapReady: (controller) {
-              final mapState = ref.watch(mapPageViewModel);
-              for (var chatRoom in mapState) {
-                //chatRoom
-                //TODO id, 위도 경도 chatRoom에서 받아서 넣기
-                final marker = NMarker(
-                    id: chatRoom.createdUserId,
-                    position: NLatLng(
-                      chatRoom.geoPoint.latitude,
-                      chatRoom.geoPoint.longitude,
-                    ));
-                controller.addOverlay(marker);
-              }
-            },
-            options: NaverMapViewOptions(),
-          ),
+          mapState.isNotEmpty
+              ? NaverMap(
+                  onMapReady: (controller) {
+                    //TODO 유저 주소 등록
+                    vm.getChatRooms('서울특별시 서초구 잠원동');
+                    // print('${mapState.length}===================');
+                    for (var chatRoom in mapState) {
+                      //chatRoom
+                      //TODO id, 위도 경도 chatRoom에서 받아서 넣기
+                      // final marker = NMarker(
+                      //     id: chatRoom.id,
+                      //     position: NLatLng(
+                      //       chatRoom.geoPoint.latitude,
+                      //       chatRoom.geoPoint.longitude,
+                      //     ));
+                      // controller.addOverlay(marker);
+                      final infoWindow = NInfoWindow.onMap(
+                          id: chatRoom.createdUserId,
+                          text: chatRoom.category,
+                          position: NLatLng(
+                            chatRoom.geoPoint.latitude,
+                            chatRoom.geoPoint.longitude,
+                          ));
+
+                      controller.addOverlay(infoWindow);
+                      // infoWindow.setOnTapListener((){})
+                    }
+                  },
+                  options: NaverMapViewOptions(
+                      initialCameraPosition:
+                          //TODO user address
+                          NCameraPosition(
+                              target: NLatLng(37.506494, 127.012474),
+                              zoom: 15)),
+                )
+              : SizedBox(),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -142,13 +164,13 @@ class _MapPageState extends ConsumerState<MapPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Categories.baseBall,
+                            mapState[0].category,
                             style: TextStyle(
                               fontSize: 24,
                             ),
                           ),
                           Text(
-                            '캐치볼 하실',
+                            mapState[0].title,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -156,14 +178,14 @@ class _MapPageState extends ConsumerState<MapPage> {
                             ),
                           ),
                           Text(
-                            '김대성',
+                            mapState[0].createdUserName,
                             style: TextStyle(
                               fontSize: 14,
                               color: AppColors.darkGray,
                             ),
                           ),
                           Text(
-                            '경기도 남양주시 별내동',
+                            mapState[0].address,
                             style: TextStyle(
                               color: AppColors.purple,
                               fontSize: 16,
@@ -175,7 +197,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print('참여하기');
+                        Navigator.pushNamed(context, '/Chat_Page');
                       },
                       child: Container(
                         width: 100,
