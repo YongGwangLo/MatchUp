@@ -24,8 +24,9 @@ class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
-    final vm = ref.watch(mapPageViewModel.notifier);
     final userState = ref.watch(userViewModelProvider);
+    final vm = ref.watch(mapPageViewModel.notifier);
+    //
     String selectedId = '';
     // print(mapState.length);
     void onSelected(String id) {
@@ -42,7 +43,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/chat_update');
+              Navigator.pushNamed(context, '/chat_page');
             },
             child: Container(
               height: 50,
@@ -58,49 +59,47 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       body: Stack(
         children: [
-          mapState.isNotEmpty
-              ? NaverMap(
-                  onMapReady: (controller) {
-                    //TODO 유저 주소 등록
-                    vm.getChatRooms('서울특별시 서초구 잠원동');
-                    // print('${mapState.length}===================');
-                    for (var chatRoom in mapState) {
-                      //마커 사이즈 0으로 만듬
-                      // final marker = NMarker(
+          mapState.when(data: (chatRooms) {
+            return NaverMap(
+              onMapReady: (controller) {
+                //TODO 유저 주소 등록
+                vm.getChatRooms('서울특별시 서초구 잠원동');
+                // print('${mapState.length}===================');
+                for (var chatRoom in chatRooms) {
+                  //chatRoom
+                  //TODO id, 위도 경도 chatRoom에서 받아서 넣기
+                  final marker = NMarker(
+                      id: chatRoom.id,
+                      position: NLatLng(
+                        chatRoom.geoPoint.latitude,
+                        chatRoom.geoPoint.longitude,
+                      ));
+                  controller.addOverlay(marker);
+                  final infoWindow = NInfoWindow.onMap(
+                      id: chatRoom.createdUserId,
+                      text: chatRoom.category,
+                      position: NLatLng(
+                        chatRoom.geoPoint.latitude,
+                        chatRoom.geoPoint.longitude,
+                      ));
 
-                      //     id: chatRoom.id,
-                      //     position: NLatLng(
-                      //       chatRoom.geoPoint.latitude,
-                      //       chatRoom.geoPoint.longitude,
-                      //     ));
-                      // controller.addOverlay(marker);
-                      final infoWindow = NInfoWindow.onMap(
-                          id: chatRoom.createdUserId,
-                          text: chatRoom.category,
-                          position: NLatLng(
-                            chatRoom.geoPoint.latitude,
-                            chatRoom.geoPoint.longitude,
-                          ));
-
-                      selectedId == ''
-                          ? controller.addOverlay(infoWindow)
-                          : SizedBox();
-                      // infoWindow.setOnTapListener((){})
-                    }
-                  },
-                  options: userState.user != null
-                      // TODO user geopoitn 받기
-                      ? NaverMapViewOptions(
-                          initialCameraPosition: NCameraPosition(
-                              target: NLatLng(userState.user!.geoPoint.latitude,
-                                  userState.user!.geoPoint.longitude),
-                              zoom: 15))
-                      : NaverMapViewOptions(
-                          initialCameraPosition: NCameraPosition(
-                              target: NLatLng(37.566535, 126.977969), //서울시청
-                              zoom: 15)),
-                )
-              : SizedBox(),
+                  controller.addOverlay(infoWindow);
+                  // infoWindow.setOnTapListener((){})
+                }
+              },
+              options: NaverMapViewOptions(
+                  initialCameraPosition:
+                      //TODO user address
+                      NCameraPosition(
+                          target: NLatLng(37.506494, 127.012474), zoom: 15)),
+            );
+          }, loading: () {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }, error: (error, stackTrace) {
+            return SizedBox();
+          }),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -172,35 +171,35 @@ class _MapPageState extends ConsumerState<MapPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            mapState[0].category,
-                            style: TextStyle(
-                              fontSize: 24,
-                            ),
-                          ),
-                          Text(
-                            mapState[0].title,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Text(
-                            mapState[0].createdUserName,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.darkGray,
-                            ),
-                          ),
-                          Text(
-                            mapState[0].address,
-                            style: TextStyle(
-                              color: AppColors.purple,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                          // Text(
+                          //   mapState[0].category,
+                          //   style: TextStyle(
+                          //     fontSize: 24,
+                          //   ),
+                          // ),
+                          // Text(
+                          //   mapState[0].title,
+                          //   style: TextStyle(
+                          //     fontSize: 16,
+                          //     fontWeight: FontWeight.w700,
+                          //     overflow: TextOverflow.ellipsis,
+                          //   ),
+                          // ),
+                          // Text(
+                          //   mapState[0].createdUserName,
+                          //   style: TextStyle(
+                          //     fontSize: 14,
+                          //     color: AppColors.darkGray,
+                          //   ),
+                          // ),
+                          // Text(
+                          //   mapState[0].address,
+                          //   style: TextStyle(
+                          //     color: AppColors.purple,
+                          //     fontSize: 16,
+                          //     fontWeight: FontWeight.w700,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
