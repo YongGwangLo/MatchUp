@@ -23,6 +23,14 @@ class _MapPageState extends ConsumerState<MapPage> {
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
     final vm = ref.watch(mapPageViewModel.notifier);
+    String selectedId = '';
+    // print(mapState.length);
+
+    void onSelected(String id) {
+      selectedId = id;
+      vm.chatRoomsRepository;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -53,20 +61,19 @@ class _MapPageState extends ConsumerState<MapPage> {
                   onMapReady: (controller) {
                     //TODO 유저 주소 등록
                     vm.getChatRooms('서울특별시 서초구 잠원동');
-                    print(mapState.length);
+                    // print('${mapState.length}===================');
                     for (var chatRoom in mapState) {
                       //chatRoom
                       //TODO id, 위도 경도 chatRoom에서 받아서 넣기
-                      final marker = NMarker(
-                          id: chatRoom.createdUserId,
-                          position: NLatLng(
-                            chatRoom.geoPoint.latitude,
-                            chatRoom.geoPoint.longitude,
-                          ));
-                      controller.addOverlay(marker);
+                      // final marker = NMarker(
+                      //     id: chatRoom.id,
+                      //     position: NLatLng(
+                      //       chatRoom.geoPoint.latitude,
+                      //       chatRoom.geoPoint.longitude,
+                      //     ));
+                      // controller.addOverlay(marker);
                       final infoWindow = NInfoWindow.onMap(
                           id: chatRoom.createdUserId,
-                          //TODO chatRoom id 고유 id로 변경.
                           text: chatRoom.category,
                           position: NLatLng(
                             chatRoom.geoPoint.latitude,
@@ -74,6 +81,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                           ));
 
                       controller.addOverlay(infoWindow);
+                      // infoWindow.setOnTapListener((){})
                     }
                   },
                   options: NaverMapViewOptions(
@@ -156,13 +164,13 @@ class _MapPageState extends ConsumerState<MapPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Categories.baseBall,
+                            mapState[0].category,
                             style: TextStyle(
                               fontSize: 24,
                             ),
                           ),
                           Text(
-                            '캐치볼 하실',
+                            mapState[0].title,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -170,14 +178,14 @@ class _MapPageState extends ConsumerState<MapPage> {
                             ),
                           ),
                           Text(
-                            '김대성',
+                            mapState[0].createdUserName,
                             style: TextStyle(
                               fontSize: 14,
                               color: AppColors.darkGray,
                             ),
                           ),
                           Text(
-                            '경기도 남양주시 별내동',
+                            mapState[0].address,
                             style: TextStyle(
                               color: AppColors.purple,
                               fontSize: 16,
@@ -189,7 +197,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print('참여하기');
+                        Navigator.pushNamed(context, '/Chat_Page');
                       },
                       child: Container(
                         width: 100,
