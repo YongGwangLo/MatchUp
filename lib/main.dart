@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,6 +9,8 @@ import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/chat/chat_update.dart';
 import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
+import 'package:match_up/ui/login/register_page.dart';
+import 'package:match_up/ui/viewModels/user_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,44 +24,36 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userViewModelProvider);
+
     return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/Chat_Update': (context) => ChatUpdate(),
-        '/Chat_Page': (context) => ChatPage(),
-        '/Chat_Submit': (context) => ChatSubmitPage(),
-        '/Login': (context) => LoginPage(),
-        '/Map': (context) => MapPage(),
-      },
-      title: 'Match-up',
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
-      ),
-      home: const MyHomePage(),
-    );
+        routes: {
+          '/chat_update': (context) => ChatUpdate(),
+          '/chat_page': (context) => ChatPage(),
+          '/chat_submit': (context) => ChatSubmitPage(),
+          '/login': (context) => LoginPage(),
+          '/map': (context) => MapPage(),
+          '/resigter': (context) => RegisterPage()
+        },
+        title: 'Match-up',
+        theme: ThemeData(
+          fontFamily: 'Pretendard',
+        ),
+        home: _getHome(userState));
   }
-}
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     dotenv.env["TEST"] ??
-      //         "", // TODO :.env 파일을 최상위 디렉토리에 추가하고 TEST=sample 입력해서 잘 나오는지 확인해주세요
-      //     style: TextStyle(
-      //         color: AppColors.purple), // TODO : AppColors를 임포트 해서 컬러 사용해 주세요.
-      //   ),
-      // ),
-      body: MapPage(),
-    );
+  Widget _getHome(UserState userState) {
+    if (userState.user == null) {
+      return const LoginPage();
+    } else if (userState.isNewUser) {
+      return const RegisterPage();
+    } else {
+      return const MapPage();
+    }
   }
 }
