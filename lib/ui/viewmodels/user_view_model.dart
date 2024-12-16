@@ -102,6 +102,7 @@ class UserViewModel extends Notifier<UserState> {
         }
       }
     } catch (e) {
+      print(e);
       state = state.copyWith(user: null, isLoading: false, isError: true);
     }
   }

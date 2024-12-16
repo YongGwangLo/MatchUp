@@ -40,7 +40,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/Chat_Update');
+              Navigator.pushNamed(context, '/chat_update');
             },
             child: Container(
               height: 50,
@@ -197,7 +197,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/Chat_Page');
+                        Navigator.pushNamed(context, '/chat_page');
                       },
                       child: Container(
                         width: 100,
