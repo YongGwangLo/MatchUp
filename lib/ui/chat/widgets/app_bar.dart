@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:match_up/constant/colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:match_up/ui/chat/chat_page_view_model.dart';
 
 PreferredSizeWidget appBar(BuildContext context) {
   return AppBar(
@@ -12,7 +14,7 @@ PreferredSizeWidget appBar(BuildContext context) {
     actions: [
       GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/Chat_Update');
+          Navigator.pushNamed(context, '/chat_update');
         },
         child: Container(
           width: 40,
@@ -22,13 +24,20 @@ PreferredSizeWidget appBar(BuildContext context) {
         ),
       )
     ],
-    title: Text(
-      '경기도 남양주시 별내동',
-      style: TextStyle(
-        color: AppColors.black,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
+    title: Consumer(
+      builder: (context, ref, child) {
+        final addressAsync = ref.watch(chatRoomAddressProvider);
+        final address = addressAsync.value ?? '';
+
+        return Text(
+          address,
+          style: TextStyle(
+            color: AppColors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+      },
     ),
   );
 }

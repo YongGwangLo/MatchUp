@@ -69,9 +69,15 @@ class SendMessage extends StatelessWidget {
             color: AppColors.lightGray,
           ),
           child: ClipOval(
-            child: (showProfile == false)
+            child: (showProfile == false || profile.isEmpty)
                 ? Icon(Icons.person, size: 24)
-                : Image.network(profile, fit: BoxFit.cover),
+                : Image.network(
+                    profile,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.person, size: 24);
+                    },
+                  ),
           ),
         ),
       ],
