@@ -3,8 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:match_up/data/model/chat.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// chatRoomId 중앙에서 상태 관리
+final chatRoomIdProvider = Provider<String>((ref) => 'wUC5E7wG5G2CMHd0HEuS');
+
 final chatViewModelProvider = StateNotifierProvider<ChatViewModel, List<Chat>>(
-  (ref) => ChatViewModel(),
+  (ref) => ChatViewModel(ref.read(chatRoomIdProvider)),
 );
 
 final currentUserProvider = FutureProvider<Map<String, String>>((ref) async {
@@ -34,7 +37,7 @@ final currentUserProvider = FutureProvider<Map<String, String>>((ref) async {
 
 final chatRoomAddressProvider = FutureProvider<String>((ref) async {
   final firestore = FirebaseFirestore.instance;
-  final chatRoomId = 'JGQel7KnD8aAYom4Zqbn';
+  final chatRoomId = ref.watch(chatRoomIdProvider);
 
   final chatRoomDoc =
       await firestore.collection('chat_rooms').doc(chatRoomId).get();
@@ -49,7 +52,7 @@ final chatRoomAddressProvider = FutureProvider<String>((ref) async {
 
 final chatRoomInfoProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final firestore = FirebaseFirestore.instance;
-  final chatRoomId = 'JGQel7KnD8aAYom4Zqbn';
+  final chatRoomId = ref.watch(chatRoomIdProvider);
 
   final chatRoomDoc =
       await firestore.collection('chat_rooms').doc(chatRoomId).get();
@@ -68,7 +71,7 @@ final chatRoomInfoProvider = FutureProvider<Map<String, dynamic>>((ref) async {
 
 final chatRoomUsersProvider = FutureProvider<int>((ref) async {
   final firestore = FirebaseFirestore.instance;
-  final chatRoomId = 'JGQel7KnD8aAYom4Zqbn';
+  final chatRoomId = ref.watch(chatRoomIdProvider);
 
   final chatRoomDoc =
       await firestore.collection('chat_rooms').doc(chatRoomId).get();
@@ -85,12 +88,12 @@ final chatRoomUsersProvider = FutureProvider<int>((ref) async {
 });
 
 class ChatViewModel extends StateNotifier<List<Chat>> {
-  ChatViewModel() : super([]) {
+  ChatViewModel(this._chatRoomId) : super([]) {
     _listenToChats();
   }
 
   final _firestore = FirebaseFirestore.instance;
-  final String _chatRoomId = 'JGQel7KnD8aAYom4Zqbn';
+  final String _chatRoomId;
 
   void _listenToChats() {
     try {
