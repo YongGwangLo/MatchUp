@@ -5,11 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/constant/categories.dart';
 import 'package:match_up/data/model/chat_rooms.dart';
+import 'package:match_up/data/repository/user_repository.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
 import 'package:match_up/ui/map/map_page_view_model.dart';
 import 'package:match_up/ui/map/widgets/bottom_navigation_bar.dart';
 import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/mypage/mypage_page.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -23,9 +25,9 @@ class _MapPageState extends ConsumerState<MapPage> {
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
     final vm = ref.watch(mapPageViewModel.notifier);
+    final userState = ref.watch(userViewModelProvider);
     String selectedId = '';
     // print(mapState.length);
-
     void onSelected(String id) {
       selectedId = id;
       vm.chatRoomsRepository;
@@ -63,9 +65,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                     vm.getChatRooms('서울특별시 서초구 잠원동');
                     // print('${mapState.length}===================');
                     for (var chatRoom in mapState) {
-                      //chatRoom
-                      //TODO id, 위도 경도 chatRoom에서 받아서 넣기
+                      //마커 사이즈 0으로 만듬
                       // final marker = NMarker(
+
                       //     id: chatRoom.id,
                       //     position: NLatLng(
                       //       chatRoom.geoPoint.latitude,
@@ -80,15 +82,22 @@ class _MapPageState extends ConsumerState<MapPage> {
                             chatRoom.geoPoint.longitude,
                           ));
 
-                      controller.addOverlay(infoWindow);
+                      selectedId == ''
+                          ? controller.addOverlay(infoWindow)
+                          : SizedBox();
                       // infoWindow.setOnTapListener((){})
                     }
                   },
-                  options: NaverMapViewOptions(
-                      initialCameraPosition:
-                          //TODO user address
-                          NCameraPosition(
-                              target: NLatLng(37.506494, 127.012474),
+                  options: userState.user != null
+                      // TODO user geopoitn 받기
+                      ? NaverMapViewOptions(
+                          initialCameraPosition: NCameraPosition(
+                              target: NLatLng(userState.user!.geoPoint.latitude,
+                                  userState.user!.geoPoint.longitude),
+                              zoom: 15))
+                      : NaverMapViewOptions(
+                          initialCameraPosition: NCameraPosition(
+                              target: NLatLng(37.566535, 126.977969), //서울시청
                               zoom: 15)),
                 )
               : SizedBox(),
@@ -227,9 +236,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   GestureDetector categoryItem(String category) {
     return GestureDetector(
-      onTap: () {
-        print('터치됨');
-      },
+      onTap: () {},
       child: Container(
         width: 52,
         height: 34,
