@@ -4,23 +4,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/data/repository/chat_room_repository.dart';
 
-class MapPageViewModel extends Notifier<List<ChatRoom>> {
+class MapPageViewModel extends Notifier<AsyncValue<List<ChatRoom>>> {
   @override
   build() {
     // TODO 회원정보(대성님) 주소 갖고오기.
-    getChatRooms('서울특별시 서초구 잠원동');
-    return [];
+    getChatRooms("서울특별시 서초구 잠원동");
+
+    return AsyncValue.loading();
   }
 
   final chatRoomsRepository = ChatRoomsRepository();
   Future<void> getChatRooms(String address) async {
     final result = await chatRoomsRepository.getChatRooms(address);
-    state = result;
+    state = AsyncValue.data(result);
   }
 }
 
 //3. 뷰모델 관리자 만들기
-final mapPageViewModel = NotifierProvider<MapPageViewModel, List<ChatRoom>>(() {
+final mapPageViewModel =
+    NotifierProvider<MapPageViewModel, AsyncValue<List<ChatRoom>>>(() {
   return MapPageViewModel();
 });
 
