@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:match_up/constant/categories.dart';
 import 'package:match_up/constant/colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:match_up/ui/chat/chat_page_view_model.dart';
 
-class ChatPageInformation extends StatelessWidget {
+class ChatPageInformation extends ConsumerWidget {
   const ChatPageInformation({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chatInfoAsync = ref.watch(chatRoomInfoProvider);
+    final userCountAsync = ref.watch(chatRoomUsersProvider);
+
+    final chatInfo = chatInfoAsync.value ??
+        {
+          'category': '',
+          'title': '',
+          'created_user_name': '',
+        };
+
+    final userCount = userCountAsync.value ?? 0;
+
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 23, 20, 15.5),
       child: Row(
@@ -21,19 +35,20 @@ class ChatPageInformation extends StatelessWidget {
               ),
             ),
             child: Center(
-                child: Text(
-              Categories.footBall,
-              style: TextStyle(
-                fontSize: 24,
+              child: Text(
+                chatInfo['category'],
+                style: TextStyle(
+                  fontSize: 24,
+                ),
               ),
-            )),
+            ),
           ),
           SizedBox(width: 18),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '축구 1:1 하실분',
+                chatInfo['title'],
                 style: TextStyle(
                   color: AppColors.purple,
                   fontSize: 16,
@@ -41,11 +56,11 @@ class ChatPageInformation extends StatelessWidget {
                 ),
               ),
               Text(
-                '현재인원: 2명',
+                '현재인원: ${userCount}명',
                 style: TextStyle(fontSize: 14, color: AppColors.black),
               ),
               Text(
-                '호스트: 김대성',
+                '호스트: ${chatInfo['created_user_name']}',
                 style: TextStyle(fontSize: 14, color: AppColors.black),
               ),
             ],

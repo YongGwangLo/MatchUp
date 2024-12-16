@@ -27,8 +27,8 @@ final currentUserProvider = FutureProvider<Map<String, String>>((ref) async {
   final userData = userDoc.data()!;
   return {
     'userId': currentUser.uid,
-    'userImg': userData['profile_image'] ?? '', // Firestore에 저장된 필드명에 맞게 수정하세요
-    'userName': userData['name'] ?? '', // Firestore에 저장된 필드명에 맞게 수정하세요
+    'userImg': userData['image'] ?? '',
+    'userName': userData['name'] ?? '',
   };
 });
 
@@ -45,6 +45,43 @@ final chatRoomAddressProvider = FutureProvider<String>((ref) async {
 
   final data = chatRoomDoc.data()!;
   return data['address'] as String? ?? '주소 없음';
+});
+
+final chatRoomInfoProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final firestore = FirebaseFirestore.instance;
+  final chatRoomId = 'JGQel7KnD8aAYom4Zqbn';
+
+  final chatRoomDoc =
+      await firestore.collection('chat_rooms').doc(chatRoomId).get();
+
+  if (!chatRoomDoc.exists) {
+    throw Exception('채팅방을 찾을 수 없습니다.');
+  }
+
+  final data = chatRoomDoc.data()!;
+  return {
+    'category': data['category'] as String? ?? '',
+    'title': data['title'] as String? ?? '',
+    'created_user_name': data['created_user_name'] as String? ?? '',
+  };
+});
+
+final chatRoomUsersProvider = FutureProvider<int>((ref) async {
+  final firestore = FirebaseFirestore.instance;
+  final chatRoomId = 'JGQel7KnD8aAYom4Zqbn';
+
+  final chatRoomDoc =
+      await firestore.collection('chat_rooms').doc(chatRoomId).get();
+
+  if (!chatRoomDoc.exists) {
+    throw Exception('채팅방을 찾을 수 없습니다.');
+  }
+
+  final data = chatRoomDoc.data()!;
+  final List<dynamic> joinedUsers = data['joined_users'] ?? [];
+
+  // 방장(created_user_name) + 참여자 수
+  return 1 + joinedUsers.length;
 });
 
 class ChatViewModel extends StateNotifier<List<Chat>> {
@@ -77,8 +114,8 @@ class ChatViewModel extends StateNotifier<List<Chat>> {
           print('Error listening to messages: $error');
         },
       );
-    } catch (e) {
-      print('Error in _listenToChats: $e');
+    } catch (error) {
+      print('Error in _listenToChats: $error');
     }
   }
 
