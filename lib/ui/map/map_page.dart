@@ -66,13 +66,13 @@ class _MapPageState extends ConsumerState<MapPage> {
                 for (var chatRoom in chatRooms) {
                   //chatRoom
                   // TODO id, 위도 경도 chatRoom에서 받아서 넣기
-                  final marker = NMarker(
-                      id: chatRoom.id,
-                      position: NLatLng(
-                        chatRoom.geoPoint.latitude,
-                        chatRoom.geoPoint.longitude,
-                      ));
-                  controller.addOverlay(marker);
+                  // final marker = NMarker(
+                  //     id: chatRoom.id,
+                  //     position: NLatLng(
+                  //       chatRoom.geoPoint.latitude,
+                  //       chatRoom.geoPoint.longitude,
+                  //     ));
+                  // controller.addOverlay(marker);
                   final infoWindow = NInfoWindow.onMap(
                       id: chatRoom.createdUserId,
                       text: chatRoom.category,
@@ -93,7 +93,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                       NCameraPosition(
                           target: NLatLng(userState.user!.geoPoint.latitude,
                               userState.user!.geoPoint.longitude),
-                          zoom: 12)),
+                          zoom: 15)),
             );
           }, loading: () {
             return Center(
