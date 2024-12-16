@@ -5,7 +5,7 @@ import 'package:match_up/constant/colors.dart';
 import 'package:match_up/core/button.dart';
 import 'package:match_up/core/category_text.dart';
 import 'package:match_up/core/geolocator_helper.dart';
-import 'package:match_up/ui/viewModels/user_view_model.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});

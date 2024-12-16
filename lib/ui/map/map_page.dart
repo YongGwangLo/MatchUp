@@ -10,6 +10,7 @@ import 'package:match_up/ui/map/map_page_view_model.dart';
 import 'package:match_up/ui/map/widgets/bottom_navigation_bar.dart';
 import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/mypage/mypage_page.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -22,7 +23,9 @@ class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
+    final userState = ref.watch(userViewModelProvider);
     final vm = ref.watch(mapPageViewModel.notifier);
+    //
     String selectedId = '';
     // print(mapState.length);
 
@@ -40,7 +43,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/Chat_Update');
+              Navigator.pushNamed(context, '/chat_page');
             },
             child: Container(
               height: 50,
@@ -56,42 +59,47 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       body: Stack(
         children: [
-          mapState.isNotEmpty
-              ? NaverMap(
-                  onMapReady: (controller) {
-                    //TODO 유저 주소 등록
-                    vm.getChatRooms('서울특별시 서초구 잠원동');
-                    // print('${mapState.length}===================');
-                    for (var chatRoom in mapState) {
-                      //chatRoom
-                      //TODO id, 위도 경도 chatRoom에서 받아서 넣기
-                      // final marker = NMarker(
-                      //     id: chatRoom.id,
-                      //     position: NLatLng(
-                      //       chatRoom.geoPoint.latitude,
-                      //       chatRoom.geoPoint.longitude,
-                      //     ));
-                      // controller.addOverlay(marker);
-                      final infoWindow = NInfoWindow.onMap(
-                          id: chatRoom.createdUserId,
-                          text: chatRoom.category,
-                          position: NLatLng(
-                            chatRoom.geoPoint.latitude,
-                            chatRoom.geoPoint.longitude,
-                          ));
+          mapState.when(data: (chatRooms) {
+            return NaverMap(
+              onMapReady: (controller) {
+                //TODO 유저 주소 등록
+                vm.getChatRooms('서울특별시 서초구 잠원동');
+                // print('${mapState.length}===================');
+                for (var chatRoom in chatRooms) {
+                  //chatRoom
+                  //TODO id, 위도 경도 chatRoom에서 받아서 넣기
+                  final marker = NMarker(
+                      id: chatRoom.id,
+                      position: NLatLng(
+                        chatRoom.geoPoint.latitude,
+                        chatRoom.geoPoint.longitude,
+                      ));
+                  controller.addOverlay(marker);
+                  final infoWindow = NInfoWindow.onMap(
+                      id: chatRoom.createdUserId,
+                      text: chatRoom.category,
+                      position: NLatLng(
+                        chatRoom.geoPoint.latitude,
+                        chatRoom.geoPoint.longitude,
+                      ));
 
-                      controller.addOverlay(infoWindow);
-                      // infoWindow.setOnTapListener((){})
-                    }
-                  },
-                  options: NaverMapViewOptions(
-                      initialCameraPosition:
-                          //TODO user address
-                          NCameraPosition(
-                              target: NLatLng(37.506494, 127.012474),
-                              zoom: 15)),
-                )
-              : SizedBox(),
+                  controller.addOverlay(infoWindow);
+                  // infoWindow.setOnTapListener((){})
+                }
+              },
+              options: NaverMapViewOptions(
+                  initialCameraPosition:
+                      //TODO user address
+                      NCameraPosition(
+                          target: NLatLng(37.506494, 127.012474), zoom: 15)),
+            );
+          }, loading: () {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }, error: (error, stackTrace) {
+            return SizedBox();
+          }),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -163,35 +171,35 @@ class _MapPageState extends ConsumerState<MapPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            mapState[0].category,
-                            style: TextStyle(
-                              fontSize: 24,
-                            ),
-                          ),
-                          Text(
-                            mapState[0].title,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Text(
-                            mapState[0].createdUserName,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.darkGray,
-                            ),
-                          ),
-                          Text(
-                            mapState[0].address,
-                            style: TextStyle(
-                              color: AppColors.purple,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                          // Text(
+                          //   mapState[0].category,
+                          //   style: TextStyle(
+                          //     fontSize: 24,
+                          //   ),
+                          // ),
+                          // Text(
+                          //   mapState[0].title,
+                          //   style: TextStyle(
+                          //     fontSize: 16,
+                          //     fontWeight: FontWeight.w700,
+                          //     overflow: TextOverflow.ellipsis,
+                          //   ),
+                          // ),
+                          // Text(
+                          //   mapState[0].createdUserName,
+                          //   style: TextStyle(
+                          //     fontSize: 14,
+                          //     color: AppColors.darkGray,
+                          //   ),
+                          // ),
+                          // Text(
+                          //   mapState[0].address,
+                          //   style: TextStyle(
+                          //     color: AppColors.purple,
+                          //     fontSize: 16,
+                          //     fontWeight: FontWeight.w700,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
