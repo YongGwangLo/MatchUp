@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:match_up/constant/colors.dart';
 
-Widget button(String title, Color color) {
+Widget button({
+  required String title,
+  required Color color,
+  VoidCallback? onPressed,
+}) {
   return ElevatedButton(
-    onPressed: () {},
+    onPressed: onPressed,
     style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all<Color>(color),
-      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+      backgroundColor: MaterialStateProperty.all<Color>(color),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -14,7 +18,7 @@ Widget button(String title, Color color) {
     ),
     child: Text(
       title,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold,
         color: AppColors.white,
