@@ -19,6 +19,7 @@ class SendMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -68,9 +69,15 @@ class SendMessage extends StatelessWidget {
             color: AppColors.lightGray,
           ),
           child: ClipOval(
-            child: (showProfile == false)
+            child: (showProfile == false || profile.isEmpty)
                 ? Icon(Icons.person, size: 24)
-                : Image.network(profile, fit: BoxFit.cover),
+                : Image.network(
+                    profile,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.person, size: 24);
+                    },
+                  ),
           ),
         ),
       ],
