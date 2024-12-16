@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/ui/login/%08widgets/custom_social_button.dart';
-import 'package:match_up/ui/viewModels/user_view_model.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

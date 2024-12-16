@@ -10,7 +10,7 @@ import 'package:match_up/ui/chat/chat_update.dart';
 import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
 import 'package:match_up/ui/login/register_page.dart';
-import 'package:match_up/ui/viewModels/user_view_model.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
