@@ -32,21 +32,19 @@ class MyApp extends ConsumerWidget {
     final userState = ref.watch(userViewModelProvider);
 
     return MaterialApp(
-      routes: {
-        '/chat_update': (context) => ChatUpdate(),
-        '/chat_page': (context) => ChatPage(),
-        '/chat_submit': (context) => ChatSubmitPage(),
-        '/login': (context) => LoginPage(),
-        '/map': (context) => MapPage(),
-        '/resigter': (context) => RegisterPage()
-      },
-      title: 'Match-up',
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
-      ),
-      // home: _getHome(userState));
-      home: ChatPage(),
-    );
+        routes: {
+          '/chat_update': (context) => ChatUpdate(),
+          '/chat_page': (context) => ChatPage(),
+          '/chat_submit': (context) => ChatSubmitPage(),
+          '/login': (context) => LoginPage(),
+          '/map': (context) => MapPage(),
+          '/resigter': (context) => RegisterPage()
+        },
+        title: 'Match-up',
+        theme: ThemeData(
+          fontFamily: 'Pretendard',
+        ),
+        home: _getHome(userState));
   }
 
   Widget _getHome(UserState userState) {
