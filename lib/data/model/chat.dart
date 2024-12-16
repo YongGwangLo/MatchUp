@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Chat {
   String content;
   DateTime timeStamp;
@@ -13,14 +15,17 @@ class Chat {
     required this.userName,
   });
 
-  Chat.fromJson(Map<String, dynamic> map)
+  Chat.fromJson(Map<String, dynamic> map, String id)
       : this(
-          content: map['content'],
-          timeStamp: DateTime.parse(map['time_stamp']),
-          userId: map['user_id'],
-          userImg: map['user_img'],
-          userName: map['user_name'],
+          content: map['content'] as String,
+          timeStamp: map['time_stamp'] is String
+              ? DateTime.parse(map['time_stamp'])
+              : (map['time_stamp'] as Timestamp).toDate(),
+          userId: map['user_id'] as String,
+          userImg: map['user_img'] as String,
+          userName: map['user_name'] as String,
         );
+
   Map<String, dynamic> toJson() {
     return {
       'content': content,
