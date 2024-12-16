@@ -30,9 +30,12 @@ class _MapPageState extends ConsumerState<MapPage> {
     String selectedId = '';
     // print(mapState.length);
     void onSelected(String id) {
-      selectedId = id;
-      vm.chatRoomsRepository;
+      setState(() {
+        selectedId = id;
+      });
     }
+
+    ChatRoom? selectedChatRoom;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,12 +65,10 @@ class _MapPageState extends ConsumerState<MapPage> {
           mapState.when(data: (chatRooms) {
             return NaverMap(
               onMapReady: (controller) {
-                //TODO 유저 주소 등록
-                vm.getChatRooms('서울특별시 서초구 잠원동');
-                // print('${mapState.length}===================');
+                vm.getChatRooms(userState.user!.address);
                 for (var chatRoom in chatRooms) {
                   //chatRoom
-                  //TODO id, 위도 경도 chatRoom에서 받아서 넣기
+                  // TODO id, 위도 경도 chatRoom에서 받아서 넣기
                   final marker = NMarker(
                       id: chatRoom.id,
                       position: NLatLng(
@@ -84,14 +85,18 @@ class _MapPageState extends ConsumerState<MapPage> {
                       ));
 
                   controller.addOverlay(infoWindow);
-                  // infoWindow.setOnTapListener((){})
+                  infoWindow.setOnTapListener((NInfoWindow infowindow) {
+                    onSelected(selectedId);
+                  });
                 }
               },
               options: NaverMapViewOptions(
                   initialCameraPosition:
                       //TODO user address
                       NCameraPosition(
-                          target: NLatLng(37.506494, 127.012474), zoom: 15)),
+                          target: NLatLng(userState.user!.geoPoint.latitude,
+                              userState.user!.geoPoint.longitude),
+                          zoom: 15)),
             );
           }, loading: () {
             return Center(
@@ -143,90 +148,93 @@ class _MapPageState extends ConsumerState<MapPage> {
             ),
           ),
           Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 15,
-                ),
-                margin: EdgeInsets.only(left: 20, right: 20, bottom: 25),
-                height: 140,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.darkGray.withOpacity(0.25),
-                      spreadRadius: 0,
-                      blurRadius: 10.0,
-                      offset: Offset(0, 2),
+            alignment: Alignment.bottomCenter,
+            child: selectedChatRoom != null
+                ? Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
                     ),
-                  ],
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(
-                    20,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Text(
-                          //   mapState[0].category,
-                          //   style: TextStyle(
-                          //     fontSize: 24,
-                          //   ),
-                          // ),
-                          // Text(
-                          //   mapState[0].title,
-                          //   style: TextStyle(
-                          //     fontSize: 16,
-                          //     fontWeight: FontWeight.w700,
-                          //     overflow: TextOverflow.ellipsis,
-                          //   ),
-                          // ),
-                          // Text(
-                          //   mapState[0].createdUserName,
-                          //   style: TextStyle(
-                          //     fontSize: 14,
-                          //     color: AppColors.darkGray,
-                          //   ),
-                          // ),
-                          // Text(
-                          //   mapState[0].address,
-                          //   style: TextStyle(
-                          //     color: AppColors.purple,
-                          //     fontSize: 16,
-                          //     fontWeight: FontWeight.w700,
-                          //   ),
-                          // ),
-                        ],
+                    margin: EdgeInsets.only(left: 20, right: 20, bottom: 25),
+                    height: 140,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.darkGray.withOpacity(0.25),
+                          spreadRadius: 0,
+                          blurRadius: 10.0,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(
+                        20,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/chat_page');
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: AppColors.purple,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Center(
-                            child: Text(
-                          '참여하기',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.white,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedChatRoom!.category,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                ),
+                              ),
+                              Text(
+                                selectedChatRoom.title,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Text(
+                                selectedChatRoom.createdUserName,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.darkGray,
+                                ),
+                              ),
+                              Text(
+                                selectedChatRoom.address,
+                                style: TextStyle(
+                                  color: AppColors.purple,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
-                        )),
-                      ),
-                    )
-                  ],
-                ),
-              )),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/chat_page');
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: AppColors.purple,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: Center(
+                                child: Text(
+                              '참여하기',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.white,
+                              ),
+                            )),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+          ),
         ],
       ),
       bottomNavigationBar: HomeBottomNavigationBar(),
