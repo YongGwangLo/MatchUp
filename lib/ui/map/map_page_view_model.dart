@@ -9,13 +9,13 @@ class MapPageViewModel extends Notifier<AsyncValue<List<ChatRoom>>> {
   build() {
     // TODO 회원정보(대성님) 주소 갖고오기.
     getChatRooms("서울특별시 서초구 잠원동");
-
     return AsyncValue.loading();
   }
 
   final chatRoomsRepository = ChatRoomsRepository();
   Future<void> getChatRooms(String address) async {
     final result = await chatRoomsRepository.getChatRooms(address);
+
     state = AsyncValue.data(result);
   }
 }
