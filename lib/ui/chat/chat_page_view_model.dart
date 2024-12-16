@@ -114,7 +114,7 @@ class ChatViewModel extends StateNotifier<List<Chat>> {
           }
         },
         onError: (error) {
-          print('Error listening to messages: $error');
+          // print('Error listening to messages: $error');
         },
       );
     } catch (error) {
@@ -144,6 +144,6 @@ class ChatViewModel extends StateNotifier<List<Chat>> {
           .add(chat.toJson());
     } catch (error) {
       print('Error sending message: $error');
-    }
+    } 
   }
 }

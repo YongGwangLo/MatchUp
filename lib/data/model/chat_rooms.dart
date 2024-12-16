@@ -29,9 +29,9 @@ class ChatRoom {
             createdUserId: map['created_user_id'],
             createdUserName: map['created_user_name'],
             geoPoint: map['geo_point'],
-            joinedUsers: List.from(map['joined_users'])
-                .map((e) => JoinedUser.fromJson(e))
-                .toList(),
+            joinedUsers: List.from(map['joined_users']).map((e) {
+              return JoinedUser.fromJson(e);
+            }).toList(),
             title: map['title']);
   Map<String, dynamic> toJson() {
     return {
