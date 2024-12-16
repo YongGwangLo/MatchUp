@@ -21,21 +21,20 @@ class MapPage extends ConsumerStatefulWidget {
 }
 
 class _MapPageState extends ConsumerState<MapPage> {
+  ChatRoom? selectedChatRoom;
+
+  void onSelected(ChatRoom chatRoom) {
+    setState(() {
+      selectedChatRoom = chatRoom;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
     final userState = ref.watch(userViewModelProvider);
     final vm = ref.watch(mapPageViewModel.notifier);
     //
-    String selectedId = '';
-    // print(mapState.length);
-    void onSelected(String id) {
-      setState(() {
-        selectedId = id;
-      });
-    }
-
-    ChatRoom? selectedChatRoom;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +64,9 @@ class _MapPageState extends ConsumerState<MapPage> {
           mapState.when(data: (chatRooms) {
             return NaverMap(
               onMapReady: (controller) {
+                // vm.getChatRooms("서울특별시 서초구 잠원동");
                 vm.getChatRooms(userState.user!.address);
+
                 for (var chatRoom in chatRooms) {
                   //chatRoom
                   // TODO id, 위도 경도 chatRoom에서 받아서 넣기
@@ -86,7 +87,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
                   controller.addOverlay(infoWindow);
                   infoWindow.setOnTapListener((NInfoWindow infowindow) {
-                    onSelected(selectedId);
+                    onSelected(chatRoom);
                   });
                 }
               },
@@ -96,7 +97,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                       NCameraPosition(
                           target: NLatLng(userState.user!.geoPoint.latitude,
                               userState.user!.geoPoint.longitude),
-                          zoom: 15)),
+                          zoom: 12)),
             );
           }, loading: () {
             return Center(
@@ -184,7 +185,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                                 ),
                               ),
                               Text(
-                                selectedChatRoom.title,
+                                selectedChatRoom!.title,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -192,14 +193,14 @@ class _MapPageState extends ConsumerState<MapPage> {
                                 ),
                               ),
                               Text(
-                                selectedChatRoom.createdUserName,
+                                selectedChatRoom!.createdUserName,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: AppColors.darkGray,
                                 ),
                               ),
                               Text(
-                                selectedChatRoom.address,
+                                selectedChatRoom!.address,
                                 style: TextStyle(
                                   color: AppColors.purple,
                                   fontSize: 16,
