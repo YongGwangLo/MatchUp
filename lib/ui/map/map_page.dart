@@ -46,6 +46,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     final mapState = ref.watch(mapPageViewModel);
     final userState = ref.watch(userViewModelProvider);
 
+    final vm = ref.watch(mapPageViewModel.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -72,9 +73,16 @@ class _MapPageState extends ConsumerState<MapPage> {
       body: Stack(
         children: [
           mapState.when(data: (chatRooms) {
+            // TODO 카테고리 분류
+            if (selectedCategory != null) {
+              vm.getCategory(userState.user!.address, selectedCategory);
+            }
             return NaverMap(
               onMapReady: (controller) {
                 for (ChatRoom chatRoom in chatRooms) {
+                  if (selectedCategory != null) {
+                    chatRoom.category;
+                  }
                   final infoWindow = NInfoWindow.onMap(
                       id: chatRoom.id,
                       text: chatRoom.category,

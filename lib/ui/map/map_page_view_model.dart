@@ -1,36 +1,63 @@
-//1. state 상태 만들기 List<chatRooms>
+//1. state 상태 만들기 List<chatRooms>, ChatRoom
 //2. 뷰모델 만들기
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/data/repository/chat_room_repository.dart';
 import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
-class MapPageViewModel extends Notifier<AsyncValue<List<ChatRoom>>> {
+class MapPageState {
+  List<ChatRoom>? chatRooms;
+  ChatRoom? selectedChatRoom;
+  String? selectedCategory;
+
+  MapPageState(
+      {required this.selectedChatRoom,
+      required this.chatRooms,
+      required this.selectedCategory});
+}
+
+class MapPageViewModel extends Notifier<MapPageState> {
   @override
   build() {
     final userState = ref.read(userViewModelProvider);
     if (userState.user != null) {
       getChatRooms(userState.user!.address);
     }
-    return AsyncValue.loading();
+    return MapPageState(
+      selectedChatRoom: null,
+      chatRooms: null,
+      selectedCategory: null,
+    );
   }
 
   final chatRoomsRepository = ChatRoomsRepository();
   Future<void> getChatRooms(String address) async {
     final result = await chatRoomsRepository.getChatRooms(address);
 
-    state = AsyncValue.data(result);
+    state = MapPageState(
+      selectedChatRoom: state.selectedChatRoom,
+      chatRooms: result,
+      selectedCategory: state.selectedCategory,
+    );
   }
 
   Future<void> getCategory(String? address, String? category) async {
+    state = MapPageState(
+      selectedChatRoom: state.selectedChatRoom,
+      chatRooms: state.chatRooms,
+      selectedCategory: category,
+    );
     final result = await chatRoomsRepository.getCategory(address, category);
-    state = AsyncValue.data(result);
+    state = MapPageState(
+      selectedChatRoom: state.selectedChatRoom,
+      chatRooms: result,
+      selectedCategory: state.selectedCategory,
+    );
   }
 }
 
 //3. 뷰모델 관리자 만들기
-final mapPageViewModel =
-    NotifierProvider<MapPageViewModel, AsyncValue<List<ChatRoom>>>(() {
+final mapPageViewModel = NotifierProvider<MapPageViewModel, MapPageState>(() {
   return MapPageViewModel();
 });
 
