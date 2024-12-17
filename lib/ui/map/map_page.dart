@@ -17,36 +17,39 @@ class MapPage extends ConsumerStatefulWidget {
 }
 
 class _MapPageState extends ConsumerState<MapPage> {
-  ChatRoom? selectedChatRoom;
-  String? selectedCategory;
+  // ChatRoom? selectedChatRoom;
+  // String? selectedCategory;
 
-  ///chatRoom 마크 눌렀을때 하단에 컨테이너 띄우기
-  void onSelected(ChatRoom chatRoom) {
-    setState(() {
-      selectedChatRoom = chatRoom;
-    });
-  }
+  // ///chatRoom 마크 눌렀을때 하단에 컨테이너 띄우기
+  // void onSelected(ChatRoom chatRoom) {
+  //   setState(() {
+  //     selectedChatRoom = chatRoom;
+  //   });
+  // }
 
-  ///카테고리 버튼 눌었을때 카테고리 선택
-  void categorySelected(String category) {
-    setState(() {
-      selectedCategory = category;
-    });
-  }
+  // ///카테고리 버튼 눌었을때 카테고리 선택
+  // void categorySelected(String category) {
+  //   setState(() {
+  //     selectedCategory = category;
+  //   });
+  // }
 
-  ///전체 눌렀을때 카테고리 초기화
-  void categoryToNull() {
-    setState(() {
-      selectedCategory = null;
-    });
-  }
+  // ///전체 눌렀을때 카테고리 초기화
+  // void categoryToNull() {
+  //   setState(() {
+  //     selectedCategory = null;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
     final userState = ref.watch(userViewModelProvider);
-
     final vm = ref.watch(mapPageViewModel.notifier);
+    final selectedChatRoom = mapState?.selectedChatRoom;
+    final selectedCategory = mapState?.selectedCategory;
+    final chatRooms = mapState?.chatRooms;
+    final address = userState.user!.address;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -72,48 +75,17 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       body: Stack(
         children: [
-          mapState.when(data: (chatRooms) {
-            // TODO 카테고리 분류
-            if (selectedCategory != null) {
-              vm.getCategory(userState.user!.address, selectedCategory);
-            }
-            return NaverMap(
-              onMapReady: (controller) {
-                for (ChatRoom chatRoom in chatRooms) {
-                  if (selectedCategory != null) {
-                    chatRoom.category;
-                  }
-                  final infoWindow = NInfoWindow.onMap(
-                      id: chatRoom.id,
-                      text: chatRoom.category,
-                      position: NLatLng(
-                        chatRoom.geoPoint.latitude,
-                        chatRoom.geoPoint.longitude,
-                      ));
-                  // if (selectedCategory == null) {
-                  //   vm.getChatRooms(userState.user!.address);
-                  // } else
-
-                  controller.addOverlay(infoWindow);
-                  infoWindow.setOnTapListener((NInfoWindow infowindow) {
-                    onSelected(chatRoom);
-                  });
-                }
-              },
+          if (chatRooms != null)
+            NaverMap(
+              /// 마커표시
+              onMapReady: vm.onMapReady,
               //초기 카메라 위치(사용자 gps위치)
               options: NaverMapViewOptions(
                   initialCameraPosition: NCameraPosition(
                       target: NLatLng(userState.user!.geoPoint.latitude,
                           userState.user!.geoPoint.longitude),
                       zoom: 15)),
-            );
-          }, loading: () {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }, error: (error, stackTrace) {
-            return SizedBox();
-          }),
+            ),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -128,7 +100,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        categoryToNull();
+                        vm.categoryToNull(address);
                       },
                       child: Container(
                         width: 65,
@@ -151,15 +123,40 @@ class _MapPageState extends ConsumerState<MapPage> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.footBall),
+                    categoryItem(
+                      category: Categories.footBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.basketBall),
+                    categoryItem(
+                      category: Categories.basketBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.baseBall),
+                    categoryItem(
+                      category: Categories.baseBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.tennis),
+                    categoryItem(
+                      category: Categories.tennis,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.pocketBall),
+                    categoryItem(
+                      category: Categories.pocketBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                   ],
                 ),
               ),
@@ -196,13 +193,13 @@ class _MapPageState extends ConsumerState<MapPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                selectedChatRoom!.category,
+                                selectedChatRoom.category,
                                 style: TextStyle(
                                   fontSize: 24,
                                 ),
                               ),
                               Text(
-                                selectedChatRoom!.title,
+                                selectedChatRoom.title,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -210,14 +207,14 @@ class _MapPageState extends ConsumerState<MapPage> {
                                 ),
                               ),
                               Text(
-                                selectedChatRoom!.createdUserName,
+                                selectedChatRoom.createdUserName,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: AppColors.darkGray,
                                 ),
                               ),
                               Text(
-                                selectedChatRoom!.address,
+                                selectedChatRoom.address,
                                 style: TextStyle(
                                   color: AppColors.purple,
                                   fontSize: 16,
@@ -230,7 +227,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/chat_page',
-                                arguments: selectedChatRoom!.id);
+                                arguments: selectedChatRoom.id);
                           },
                           child: Container(
                             width: 100,
@@ -260,10 +257,15 @@ class _MapPageState extends ConsumerState<MapPage> {
     );
   }
 
-  GestureDetector categoryItem(String category) {
+  GestureDetector categoryItem({
+    required String category,
+    required MapPageViewModel vm,
+    required String address,
+    required String? selectedCategory,
+  }) {
     return GestureDetector(
       onTap: () {
-        categorySelected(category);
+        vm.getCategory(address, category);
       },
       child: Container(
         width: 52,
