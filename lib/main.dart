@@ -7,6 +7,7 @@ import 'package:match_up/firebase_options.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
 import 'package:match_up/ui/chat/chat_page.dart';
 import 'package:match_up/ui/chat/chat_create_page.dart';
+import 'package:match_up/ui/home/home_page.dart';
 import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
 import 'package:match_up/ui/login/register_page.dart';
@@ -53,7 +54,7 @@ class MyApp extends ConsumerWidget {
     } else if (userState.isNewUser) {
       return const RegisterPage();
     } else {
-      return const MapPage();
+      return const HomePage();
     }
   }
 }

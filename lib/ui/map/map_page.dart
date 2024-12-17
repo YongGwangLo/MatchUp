@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/categories.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/ui/map/map_page_view_model.dart';
-import 'package:match_up/ui/map/widgets/bottom_navigation_bar.dart';
 import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class MapPage extends ConsumerStatefulWidget {
@@ -228,7 +227,6 @@ class _MapPageState extends ConsumerState<MapPage> {
           ),
         ],
       ),
-      bottomNavigationBar: HomeBottomNavigationBar(),
     );
   }
 
