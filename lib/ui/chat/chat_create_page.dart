@@ -7,6 +7,8 @@ import 'package:match_up/ui/chat/chat_create_view_model.dart';
 import 'package:match_up/ui/chat/widgets/chat_create_category.dart';
 import 'package:match_up/ui/chat/widgets/chat_create_location.dart';
 import 'package:match_up/ui/chat/widgets/chat_create_title.dart';
+import 'package:match_up/ui/map/map_page_view_model.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class ChatCreate extends ConsumerWidget {
   const ChatCreate({super.key});
@@ -49,7 +51,8 @@ class ChatCreate extends ConsumerWidget {
                 onPressed: () async {
                   final category = ref.read(selectedCategoryProvider);
                   final title = ref.read(chatTitleProvider);
-                  final location = await ref.read(userLocationProvider.future);
+                  final userState = ref.watch(userViewModelProvider);
+                  final mapViewmodel = ref.watch(mapPageViewModel.notifier);
 
                   if (category == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -71,9 +74,10 @@ class ChatCreate extends ConsumerWidget {
                         .createChatRoom(
                           category: category,
                           title: title,
-                          address: location['address'],
-                          geoPoint: location['geoPoint'],
+                          address: userState.user!.address,
+                          geoPoint: userState.user!.geoPoint,
                         );
+                    mapViewmodel.getChatRooms(userState.user!.address);
                     Navigator.pop(context);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
