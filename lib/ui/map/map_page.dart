@@ -39,7 +39,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/chat_page');
+              Navigator.pushNamed(context, '/chat_create');
             },
             child: Container(
               height: 50,

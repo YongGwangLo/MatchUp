@@ -13,9 +13,7 @@ PreferredSizeWidget appBar(BuildContext context) {
     ),
     actions: [
       GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, '/chat_update');
-        },
+        onTap: () {},
         child: Container(
           width: 40,
           height: 40,
