@@ -45,7 +45,6 @@ class _MapPageState extends ConsumerState<MapPage> {
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
     final userState = ref.watch(userViewModelProvider);
-    final vm = ref.watch(mapPageViewModel.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -74,14 +73,10 @@ class _MapPageState extends ConsumerState<MapPage> {
         children: [
           mapState.when(data: (chatRooms) {
             return NaverMap(
-              // if(selectedCategory != null) {
-              //     vm.getCategory(userState.user!.address, chatRoom.category);
-              // }
-
               onMapReady: (controller) {
-                for (var chatRoom in chatRooms) {
+                for (ChatRoom chatRoom in chatRooms) {
                   final infoWindow = NInfoWindow.onMap(
-                      id: chatRoom.createdUserId,
+                      id: chatRoom.id,
                       text: chatRoom.category,
                       position: NLatLng(
                         chatRoom.geoPoint.latitude,
