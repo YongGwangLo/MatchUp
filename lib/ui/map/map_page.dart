@@ -17,30 +17,6 @@ class MapPage extends ConsumerStatefulWidget {
 }
 
 class _MapPageState extends ConsumerState<MapPage> {
-  // ChatRoom? selectedChatRoom;
-  // String? selectedCategory;
-
-  // ///chatRoom 마크 눌렀을때 하단에 컨테이너 띄우기
-  // void onSelected(ChatRoom chatRoom) {
-  //   setState(() {
-  //     selectedChatRoom = chatRoom;
-  //   });
-  // }
-
-  // ///카테고리 버튼 눌었을때 카테고리 선택
-  // void categorySelected(String category) {
-  //   setState(() {
-  //     selectedCategory = category;
-  //   });
-  // }
-
-  // ///전체 눌렀을때 카테고리 초기화
-  // void categoryToNull() {
-  //   setState(() {
-  //     selectedCategory = null;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
