@@ -58,29 +58,6 @@ class ChatPageInformation extends ConsumerWidget {
             ],
           ),
           Spacer(),
-          GestureDetector(
-            onTap: () {
-              print('chatting out');
-            },
-            child: Container(
-              width: 100,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: AppColors.purple,
-              ),
-              child: Center(
-                child: Text(
-                  '나가기',
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
