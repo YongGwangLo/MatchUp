@@ -69,24 +69,7 @@ final chatRoomInfoProvider = FutureProvider<Map<String, dynamic>>((ref) async {
     'created_user_name': data['created_user_name'] as String? ?? '',
   };
 }, dependencies: [chatRoomIdProvider]); // 의존성 추가
-
-final chatRoomUsersProvider = FutureProvider<int>((ref) async {
-  final firestore = FirebaseFirestore.instance;
-  final chatRoomId = ref.watch(chatRoomIdProvider);
-
-  final chatRoomDoc =
-      await firestore.collection('chat_rooms').doc(chatRoomId).get();
-
-  if (!chatRoomDoc.exists) {
-    throw Exception('채팅방을 찾을 수 없습니다.');
-  }
-
-  final data = chatRoomDoc.data()!;
-  final List<dynamic> joinedUsers = data['joined_users'] ?? [];
-
-  // 방장(created_user_name) + 참여자 수
-  return 1 + joinedUsers.length;
-}, dependencies: [chatRoomIdProvider]); // 의존성 추가
+// 의존성 추가
 
 class ChatViewModel extends StateNotifier<List<Chat>> {
   ChatViewModel(this._chatRoomId) : super([]) {
