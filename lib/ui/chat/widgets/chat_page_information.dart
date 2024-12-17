@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:match_up/constant/categories.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/ui/chat/chat_page_view_model.dart';
@@ -10,7 +9,6 @@ class ChatPageInformation extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chatInfoAsync = ref.watch(chatRoomInfoProvider);
-    final userCountAsync = ref.watch(chatRoomUsersProvider);
 
     final chatInfo = chatInfoAsync.value ??
         {
@@ -18,8 +16,6 @@ class ChatPageInformation extends ConsumerWidget {
           'title': '',
           'created_user_name': '',
         };
-
-    final userCount = userCountAsync.value ?? 0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 23, 20, 15.5),
@@ -54,10 +50,6 @@ class ChatPageInformation extends ConsumerWidget {
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-              Text(
-                '현재인원: ${userCount}명',
-                style: TextStyle(fontSize: 14, color: AppColors.black),
               ),
               Text(
                 '호스트: ${chatInfo['created_user_name']}',
