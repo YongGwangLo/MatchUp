@@ -3,12 +3,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/data/repository/chat_room_repository.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class MapPageViewModel extends Notifier<AsyncValue<List<ChatRoom>>> {
   @override
   build() {
-    // TODO 회원정보(대성님) 주소 갖고오기.
-    getChatRooms("서울특별시 서초구 잠원동");
+    final userState = ref.read(userViewModelProvider);
+    if (userState.user != null) {
+      getChatRooms(userState.user!.address);
+    }
     return AsyncValue.loading();
   }
 
