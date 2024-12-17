@@ -17,4 +17,20 @@ class ChatRoomsRepository {
       return chatRoom;
     }).toList();
   }
+
+  Future<List<ChatRoom>> getCategory(String? address, String? category) async {
+    final result = await FirebaseFirestore.instance
+        .collection('chat_rooms')
+        .where('address', isEqualTo: address)
+        .where('category', isEqualTo: category)
+        .get();
+    return result.docs.map((e) {
+      final newMap = {
+        'id': e.id,
+        ...e.data(),
+      };
+      final chatRoom = ChatRoom.fromJson(newMap);
+      return chatRoom;
+    }).toList();
+  }
 }

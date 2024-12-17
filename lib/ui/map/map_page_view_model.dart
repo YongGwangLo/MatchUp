@@ -21,6 +21,11 @@ class MapPageViewModel extends Notifier<AsyncValue<List<ChatRoom>>> {
 
     state = AsyncValue.data(result);
   }
+
+  Future<void> getCategory(String? address, String? category) async {
+    final result = await chatRoomsRepository.getCategory(address, category);
+    state = AsyncValue.data(result);
+  }
 }
 
 //3. 뷰모델 관리자 만들기

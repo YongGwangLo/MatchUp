@@ -18,10 +18,26 @@ class MapPage extends ConsumerStatefulWidget {
 
 class _MapPageState extends ConsumerState<MapPage> {
   ChatRoom? selectedChatRoom;
+  String? selectedCategory;
 
+  ///chatRoom 마크 눌렀을때 하단에 컨테이너 띄우기
   void onSelected(ChatRoom chatRoom) {
     setState(() {
       selectedChatRoom = chatRoom;
+    });
+  }
+
+  ///카테고리 버튼 눌었을때 카테고리 선택
+  void categorySelected(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
+
+  ///전체 눌렀을때 카테고리 초기화
+  void categoryToNull() {
+    setState(() {
+      selectedCategory = null;
     });
   }
 
@@ -30,7 +46,6 @@ class _MapPageState extends ConsumerState<MapPage> {
     final mapState = ref.watch(mapPageViewModel);
     final userState = ref.watch(userViewModelProvider);
     final vm = ref.watch(mapPageViewModel.notifier);
-    //
 
     return Scaffold(
       appBar: AppBar(
@@ -59,20 +74,12 @@ class _MapPageState extends ConsumerState<MapPage> {
         children: [
           mapState.when(data: (chatRooms) {
             return NaverMap(
-              onMapReady: (controller) {
-                // vm.getChatRooms("서울특별시 서초구 잠원동");
-                vm.getChatRooms(userState.user!.address);
+              // if(selectedCategory != null) {
+              //     vm.getCategory(userState.user!.address, chatRoom.category);
+              // }
 
+              onMapReady: (controller) {
                 for (var chatRoom in chatRooms) {
-                  //chatRoom
-                  // TODO id, 위도 경도 chatRoom에서 받아서 넣기
-                  // final marker = NMarker(
-                  //     id: chatRoom.id,
-                  //     position: NLatLng(
-                  //       chatRoom.geoPoint.latitude,
-                  //       chatRoom.geoPoint.longitude,
-                  //     ));
-                  // controller.addOverlay(marker);
                   final infoWindow = NInfoWindow.onMap(
                       id: chatRoom.createdUserId,
                       text: chatRoom.category,
@@ -80,6 +87,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                         chatRoom.geoPoint.latitude,
                         chatRoom.geoPoint.longitude,
                       ));
+                  // if (selectedCategory == null) {
+                  //   vm.getChatRooms(userState.user!.address);
+                  // } else
 
                   controller.addOverlay(infoWindow);
                   infoWindow.setOnTapListener((NInfoWindow infowindow) {
@@ -87,13 +97,12 @@ class _MapPageState extends ConsumerState<MapPage> {
                   });
                 }
               },
+              //초기 카메라 위치(사용자 gps위치)
               options: NaverMapViewOptions(
-                  initialCameraPosition:
-                      //TODO user address
-                      NCameraPosition(
-                          target: NLatLng(userState.user!.geoPoint.latitude,
-                              userState.user!.geoPoint.longitude),
-                          zoom: 15)),
+                  initialCameraPosition: NCameraPosition(
+                      target: NLatLng(userState.user!.geoPoint.latitude,
+                          userState.user!.geoPoint.longitude),
+                      zoom: 15)),
             );
           }, loading: () {
             return Center(
@@ -114,18 +123,27 @@ class _MapPageState extends ConsumerState<MapPage> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Container(
-                      width: 65,
-                      height: 34,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(103),
-                          color: AppColors.purple),
-                      child: Center(
-                        child: Text(
-                          '전체',
-                          style: TextStyle(
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w500),
+                    GestureDetector(
+                      onTap: () {
+                        categoryToNull();
+                      },
+                      child: Container(
+                        width: 65,
+                        height: 34,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(103),
+                            color: selectedCategory != null
+                                ? AppColors.white
+                                : AppColors.purple),
+                        child: Center(
+                          child: Text(
+                            '전체',
+                            style: TextStyle(
+                                color: selectedCategory != null
+                                    ? AppColors.purple
+                                    : AppColors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ),
                     ),
@@ -241,14 +259,17 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   GestureDetector categoryItem(String category) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        categorySelected(category);
+      },
       child: Container(
         width: 52,
         height: 34,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(103),
-            color: AppColors.white,
-            // TODO 눌리면 색변경해줘야함 삼항연산자
+            color: selectedCategory == category
+                ? AppColors.purple
+                : AppColors.white,
             boxShadow: [
               BoxShadow(
                 color: AppColors.darkGray.withOpacity(0.25),
