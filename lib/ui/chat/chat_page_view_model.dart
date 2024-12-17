@@ -102,7 +102,7 @@ class ChatViewModel extends StateNotifier<List<Chat>> {
           .collection('chat_rooms')
           .doc(_chatRoomId)
           .collection('messages')
-          .orderBy('time_stamp', descending: false)
+          .orderBy('timestamp', descending: false)
           .snapshots()
           .listen(
         (snapshot) {

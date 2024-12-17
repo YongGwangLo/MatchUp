@@ -18,9 +18,9 @@ class Chat {
   Chat.fromJson(Map<String, dynamic> map, String id)
       : this(
           content: map['content'] as String,
-          timeStamp: map['time_stamp'] is String
-              ? DateTime.parse(map['time_stamp'])
-              : (map['time_stamp'] as Timestamp).toDate(),
+          timeStamp: map['timestamp'] is String
+              ? DateTime.parse(map['timestamp'])
+              : (map['timestamp'] as Timestamp).toDate(),
           userId: map['user_id'] as String,
           userImg: map['user_img'] as String,
           userName: map['user_name'] as String,
@@ -29,7 +29,7 @@ class Chat {
   Map<String, dynamic> toJson() {
     return {
       'content': content,
-      'time_stamp': timeStamp.toIso8601String(),
+      'timestamp': timeStamp.toIso8601String(),
       'user_id': userId,
       'user_img': userImg,
       'user_name': userName,
