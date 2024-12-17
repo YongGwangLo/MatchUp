@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/firebase_options.dart';
 import 'package:match_up/ui/chat-submit/chat_submit_page.dart';
 import 'package:match_up/ui/chat/chat_page.dart';
-import 'package:match_up/ui/chat/chat_update.dart';
+import 'package:match_up/ui/chat/chat_create_page.dart';
 import 'package:match_up/ui/login/login_page.dart';
 import 'package:match_up/ui/map/map_page.dart';
 import 'package:match_up/ui/login/register_page.dart';
@@ -33,7 +33,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp(
         routes: {
-          '/chat_update': (context) => ChatUpdate(),
+          '/chat_create': (context) => ChatCreate(),
           '/chat_page': (context) => ChatPage(),
           '/chat_submit': (context) => ChatSubmitPage(),
           '/login': (context) => LoginPage(),
