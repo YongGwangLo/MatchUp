@@ -110,7 +110,3 @@ class MapPageViewModel extends Notifier<MapPageState?> {
 final mapPageViewModel = NotifierProvider<MapPageViewModel, MapPageState?>(() {
   return MapPageViewModel();
 });
-
-//Notifier- 처음에 요청하면 뷰모델 생성=provider에게 상태달라고 요청한 순간 부터(앱이 종료 될때까지)-전역적인 상태관리
-//AutoDisposeNotifier-생성은 요청할때 똑같이 되고, 화면에서 바뀌면 새로고침.(참조가 더이상 안될때)
-// AutoDisposeFamilyNotifier

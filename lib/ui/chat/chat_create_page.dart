@@ -54,6 +54,7 @@ class ChatCreate extends ConsumerWidget {
                   final userState = ref.watch(userViewModelProvider);
                   final mapViewmodel = ref.watch(mapPageViewModel.notifier);
 
+
                   if (category == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('카테고리를 선택해주세요')),

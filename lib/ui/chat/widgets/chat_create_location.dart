@@ -8,7 +8,6 @@ Widget chatCreateLocation() {
   return Consumer(
     builder: (context, ref, child) {
       final locationAsync = ref.watch(userLocationProvider);
-
       final userState = ref.watch(userViewModelProvider);
 
       return locationAsync.when(
