@@ -15,4 +15,12 @@ class UserRepository {
   Future<void> saveUser(UserModel user) async {
     await _firestore.collection('users').doc(user.uid).set(user.toJson());
   }
+
+  Future<void> updateUser(UserModel user) async {
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+      'nickname': user.nickname,
+      'address': user.address,
+      'geoPoint': user.geoPoint,
+    });
+  }
 }
