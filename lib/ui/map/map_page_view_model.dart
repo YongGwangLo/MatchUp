@@ -73,6 +73,7 @@ class MapPageViewModel extends Notifier<MapPageState?> {
       selectedChatRoom: state!.selectedChatRoom,
       selectedCategory: null,
       //ui에서 chatRooms를 불러오고 map(화면)을 불러온다.
+      //selectedChatRoom 을 먼저 null로 바꾸고 데이터(chatRooms 리스트 변경)
     );
     final result = await chatRoomsRepository.getChatRooms(address);
     state = state!.copyWith(chatRooms: result);
