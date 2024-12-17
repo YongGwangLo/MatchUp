@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -143,6 +144,42 @@ class UserViewModel extends Notifier<UserState> {
         state = state.copyWith(
           isLoading: false,
           isError: true,
+        );
+      }
+    }
+  }
+
+  Future<void> updateUserToFirestore(BuildContext context) async {
+    final user = state.user;
+    if (user != null) {
+      try {
+        UserRepository userRepository = UserRepository();
+        await userRepository.updateUser(user);
+
+        state = state.copyWith(
+          isLoading: false,
+          isError: false,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('정보가 성공적으로 수정되었습니다.'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } catch (e) {
+        state = state.copyWith(
+          isLoading: false,
+          isError: true,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('정보 수정에 실패했습니다. 다시 시도해주세요.'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
         );
       }
     }

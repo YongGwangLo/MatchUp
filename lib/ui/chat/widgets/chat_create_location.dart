@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
 import 'package:match_up/ui/chat/chat_create_view_model.dart';
+import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 Widget chatCreateLocation() {
   return Consumer(
     builder: (context, ref, child) {
       final locationAsync = ref.watch(userLocationProvider);
+
+      final userState = ref.watch(userViewModelProvider);
 
       return locationAsync.when(
         data: (location) => Container(
@@ -27,7 +30,7 @@ Widget chatCreateLocation() {
               ),
               SizedBox(width: 12),
               Text(
-                location['address'] ?? '위치 정보 없음',
+                userState.user!.address,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

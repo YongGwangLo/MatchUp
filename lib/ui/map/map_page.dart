@@ -4,9 +4,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/categories.dart';
 import 'package:match_up/constant/colors.dart';
-import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/ui/map/map_page_view_model.dart';
-import 'package:match_up/ui/map/widgets/bottom_navigation_bar.dart';
 import 'package:match_up/ui/viewmodels/user_view_model.dart';
 
 class MapPage extends ConsumerStatefulWidget {
@@ -17,30 +15,6 @@ class MapPage extends ConsumerStatefulWidget {
 }
 
 class _MapPageState extends ConsumerState<MapPage> {
-  // ChatRoom? selectedChatRoom;
-  // String? selectedCategory;
-
-  // ///chatRoom 마크 눌렀을때 하단에 컨테이너 띄우기
-  // void onSelected(ChatRoom chatRoom) {
-  //   setState(() {
-  //     selectedChatRoom = chatRoom;
-  //   });
-  // }
-
-  // ///카테고리 버튼 눌었을때 카테고리 선택
-  // void categorySelected(String category) {
-  //   setState(() {
-  //     selectedCategory = category;
-  //   });
-  // }
-
-  // ///전체 눌렀을때 카테고리 초기화
-  // void categoryToNull() {
-  //   setState(() {
-  //     selectedCategory = null;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
@@ -253,7 +227,6 @@ class _MapPageState extends ConsumerState<MapPage> {
           ),
         ],
       ),
-      bottomNavigationBar: HomeBottomNavigationBar(),
     );
   }
 
