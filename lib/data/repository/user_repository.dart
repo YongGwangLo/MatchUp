@@ -20,7 +20,7 @@ class UserRepository {
     await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
       'nickname': user.nickname,
       'address': user.address,
-      'geoPoint': user.geoPoint,
+      'geo_point': user.geoPoint,
     });
   }
 }
