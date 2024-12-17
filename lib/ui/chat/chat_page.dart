@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/constant/colors.dart';
-import 'package:match_up/data/model/chat_rooms.dart';
 import 'package:match_up/ui/chat/widgets/app_bar.dart';
 import 'package:match_up/ui/chat/widgets/chat_page_body.dart';
 import 'package:match_up/ui/chat/widgets/chat_page_information.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:match_up/ui/chat/chat_page_view_model.dart';
 
-class ChatPage extends ConsumerStatefulWidget {
-  const ChatPage({super.key, this.selectedChatRoom});
-  final ChatRoom? selectedChatRoom;
-  //selectedChatRoom.id
+class ChatPage extends ConsumerWidget {
+  const ChatPage({super.key});
+
   @override
-  ConsumerState<ChatPage> createState() => _ChatPageState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chatRoomId = ModalRoute.of(context)!.settings.arguments as String;
+
+    return ProviderScope(
+      overrides: [
+        chatRoomIdProvider.overrideWithValue(chatRoomId),
+      ],
+      child: _ChatPageContent(),
+    );
+  }
 }
 
-class _ChatPageState extends ConsumerState<ChatPage> {
+class _ChatPageContent extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<_ChatPageContent> createState() => _ChatPageContentState();
+}
+
+class _ChatPageContentState extends ConsumerState<_ChatPageContent> {
   final controller = TextEditingController();
 
   void _sendMessage() async {
     if (controller.text.trim().isEmpty) return;
 
-    // 사용자 정보 가져오기
     final userInfo = await ref.read(currentUserProvider.future);
 
     ref.read(chatViewModelProvider.notifier).sendMessage(
