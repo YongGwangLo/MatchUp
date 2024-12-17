@@ -29,8 +29,6 @@ class _MapPageState extends ConsumerState<MapPage> {
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
     final userState = ref.watch(userViewModelProvider);
-    final vm = ref.watch(mapPageViewModel.notifier);
-    //
 
     return Scaffold(
       appBar: AppBar(
@@ -60,21 +58,9 @@ class _MapPageState extends ConsumerState<MapPage> {
           mapState.when(data: (chatRooms) {
             return NaverMap(
               onMapReady: (controller) {
-                // vm.getChatRooms("서울특별시 서초구 잠원동");
-                vm.getChatRooms(userState.user!.address);
-
-                for (var chatRoom in chatRooms) {
-                  //chatRoom
-                  // TODO id, 위도 경도 chatRoom에서 받아서 넣기
-                  // final marker = NMarker(
-                  //     id: chatRoom.id,
-                  //     position: NLatLng(
-                  //       chatRoom.geoPoint.latitude,
-                  //       chatRoom.geoPoint.longitude,
-                  //     ));
-                  // controller.addOverlay(marker);
+                for (ChatRoom chatRoom in chatRooms) {
                   final infoWindow = NInfoWindow.onMap(
-                      id: chatRoom.createdUserId,
+                      id: chatRoom.id,
                       text: chatRoom.category,
                       position: NLatLng(
                         chatRoom.geoPoint.latitude,
@@ -88,12 +74,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                 }
               },
               options: NaverMapViewOptions(
-                  initialCameraPosition:
-                      //TODO user address
-                      NCameraPosition(
-                          target: NLatLng(userState.user!.geoPoint.latitude,
-                              userState.user!.geoPoint.longitude),
-                          zoom: 15)),
+                  initialCameraPosition: NCameraPosition(
+                      target: NLatLng(userState.user!.geoPoint.latitude,
+                          userState.user!.geoPoint.longitude),
+                      zoom: 15)),
             );
           }, loading: () {
             return Center(
