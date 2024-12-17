@@ -4,10 +4,11 @@ import 'package:match_up/data/model/chat.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // chatRoomId 중앙에서 상태 관리
-final chatRoomIdProvider = Provider<String>((ref) => 'wUC5E7wG5G2CMHd0HEuS');
+final chatRoomIdProvider = Provider<String>((ref) => 'default_room_id');
 
 final chatViewModelProvider = StateNotifierProvider<ChatViewModel, List<Chat>>(
   (ref) => ChatViewModel(ref.read(chatRoomIdProvider)),
+  dependencies: [chatRoomIdProvider], // 의존성 추가
 );
 
 final currentUserProvider = FutureProvider<Map<String, String>>((ref) async {
@@ -48,7 +49,7 @@ final chatRoomAddressProvider = FutureProvider<String>((ref) async {
 
   final data = chatRoomDoc.data()!;
   return data['address'] as String? ?? '주소 없음';
-});
+}, dependencies: [chatRoomIdProvider]); // 의존성 추가
 
 final chatRoomInfoProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final firestore = FirebaseFirestore.instance;
@@ -67,7 +68,7 @@ final chatRoomInfoProvider = FutureProvider<Map<String, dynamic>>((ref) async {
     'title': data['title'] as String? ?? '',
     'created_user_name': data['created_user_name'] as String? ?? '',
   };
-});
+}, dependencies: [chatRoomIdProvider]); // 의존성 추가
 
 final chatRoomUsersProvider = FutureProvider<int>((ref) async {
   final firestore = FirebaseFirestore.instance;
@@ -85,7 +86,7 @@ final chatRoomUsersProvider = FutureProvider<int>((ref) async {
 
   // 방장(created_user_name) + 참여자 수
   return 1 + joinedUsers.length;
-});
+}, dependencies: [chatRoomIdProvider]); // 의존성 추가
 
 class ChatViewModel extends StateNotifier<List<Chat>> {
   ChatViewModel(this._chatRoomId) : super([]) {
@@ -144,6 +145,6 @@ class ChatViewModel extends StateNotifier<List<Chat>> {
           .add(chat.toJson());
     } catch (error) {
       print('Error sending message: $error');
-    } 
+    }
   }
 }
