@@ -17,19 +17,39 @@ class MapPage extends ConsumerStatefulWidget {
 }
 
 class _MapPageState extends ConsumerState<MapPage> {
-  ChatRoom? selectedChatRoom;
+  // ChatRoom? selectedChatRoom;
+  // String? selectedCategory;
 
-  void onSelected(ChatRoom chatRoom) {
-    setState(() {
-      selectedChatRoom = chatRoom;
-    });
-  }
+  // ///chatRoom 마크 눌렀을때 하단에 컨테이너 띄우기
+  // void onSelected(ChatRoom chatRoom) {
+  //   setState(() {
+  //     selectedChatRoom = chatRoom;
+  //   });
+  // }
+
+  // ///카테고리 버튼 눌었을때 카테고리 선택
+  // void categorySelected(String category) {
+  //   setState(() {
+  //     selectedCategory = category;
+  //   });
+  // }
+
+  // ///전체 눌렀을때 카테고리 초기화
+  // void categoryToNull() {
+  //   setState(() {
+  //     selectedCategory = null;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     final mapState = ref.watch(mapPageViewModel);
     final userState = ref.watch(userViewModelProvider);
-
+    final vm = ref.watch(mapPageViewModel.notifier);
+    final selectedChatRoom = mapState?.selectedChatRoom;
+    final selectedCategory = mapState?.selectedCategory;
+    final chatRooms = mapState?.chatRooms;
+    final address = userState.user!.address;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -55,37 +75,17 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       body: Stack(
         children: [
-          mapState.when(data: (chatRooms) {
-            return NaverMap(
-              onMapReady: (controller) {
-                for (ChatRoom chatRoom in chatRooms) {
-                  final infoWindow = NInfoWindow.onMap(
-                      id: chatRoom.id,
-                      text: chatRoom.category,
-                      position: NLatLng(
-                        chatRoom.geoPoint.latitude,
-                        chatRoom.geoPoint.longitude,
-                      ));
-
-                  controller.addOverlay(infoWindow);
-                  infoWindow.setOnTapListener((NInfoWindow infowindow) {
-                    onSelected(chatRoom);
-                  });
-                }
-              },
+          if (chatRooms != null)
+            NaverMap(
+              /// 마커표시
+              onMapReady: vm.onMapReady,
+              //초기 카메라 위치(사용자 gps위치)
               options: NaverMapViewOptions(
                   initialCameraPosition: NCameraPosition(
                       target: NLatLng(userState.user!.geoPoint.latitude,
                           userState.user!.geoPoint.longitude),
                       zoom: 15)),
-            );
-          }, loading: () {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }, error: (error, stackTrace) {
-            return SizedBox();
-          }),
+            ),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -98,31 +98,65 @@ class _MapPageState extends ConsumerState<MapPage> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Container(
-                      width: 65,
-                      height: 34,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(103),
-                          color: AppColors.purple),
-                      child: Center(
-                        child: Text(
-                          '전체',
-                          style: TextStyle(
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w500),
+                    GestureDetector(
+                      onTap: () {
+                        vm.categoryToNull(address);
+                      },
+                      child: Container(
+                        width: 65,
+                        height: 34,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(103),
+                            color: selectedCategory != null
+                                ? AppColors.white
+                                : AppColors.purple),
+                        child: Center(
+                          child: Text(
+                            '전체',
+                            style: TextStyle(
+                                color: selectedCategory != null
+                                    ? AppColors.purple
+                                    : AppColors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.footBall),
+                    categoryItem(
+                      category: Categories.footBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.basketBall),
+                    categoryItem(
+                      category: Categories.basketBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.baseBall),
+                    categoryItem(
+                      category: Categories.baseBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.tennis),
+                    categoryItem(
+                      category: Categories.tennis,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                     SizedBox(width: 10),
-                    categoryItem(Categories.pocketBall),
+                    categoryItem(
+                      category: Categories.pocketBall,
+                      vm: vm,
+                      address: address,
+                      selectedCategory: selectedCategory,
+                    ),
                   ],
                 ),
               ),
@@ -159,13 +193,13 @@ class _MapPageState extends ConsumerState<MapPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                selectedChatRoom!.category,
+                                selectedChatRoom.category,
                                 style: TextStyle(
                                   fontSize: 24,
                                 ),
                               ),
                               Text(
-                                selectedChatRoom!.title,
+                                selectedChatRoom.title,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -173,14 +207,14 @@ class _MapPageState extends ConsumerState<MapPage> {
                                 ),
                               ),
                               Text(
-                                selectedChatRoom!.createdUserName,
+                                selectedChatRoom.createdUserName,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: AppColors.darkGray,
                                 ),
                               ),
                               Text(
-                                selectedChatRoom!.address,
+                                selectedChatRoom.address,
                                 style: TextStyle(
                                   color: AppColors.purple,
                                   fontSize: 16,
@@ -193,7 +227,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/chat_page',
-                                arguments: selectedChatRoom!.id);
+                                arguments: selectedChatRoom.id);
                           },
                           child: Container(
                             width: 100,
@@ -223,16 +257,24 @@ class _MapPageState extends ConsumerState<MapPage> {
     );
   }
 
-  GestureDetector categoryItem(String category) {
+  GestureDetector categoryItem({
+    required String category,
+    required MapPageViewModel vm,
+    required String address,
+    required String? selectedCategory,
+  }) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        vm.getCategory(address, category);
+      },
       child: Container(
         width: 52,
         height: 34,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(103),
-            color: AppColors.white,
-            // TODO 눌리면 색변경해줘야함 삼항연산자
+            color: selectedCategory == category
+                ? AppColors.purple
+                : AppColors.white,
             boxShadow: [
               BoxShadow(
                 color: AppColors.darkGray.withOpacity(0.25),

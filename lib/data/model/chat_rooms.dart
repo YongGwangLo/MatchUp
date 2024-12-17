@@ -38,4 +38,24 @@ class ChatRoom {
       'title': title,
     };
   }
+
+  ChatRoom copyWith({
+    String? id,
+    String? address,
+    String? category,
+    String? createdUserId,
+    String? createdUserName,
+    GeoPoint? geoPoint,
+    String? title,
+  }) {
+    return ChatRoom(
+      id: id ?? this.id,
+      address: address ?? this.address,
+      category: category ?? this.category,
+      createdUserId: createdUserId ?? this.createdUserId,
+      createdUserName: createdUserName ?? this.createdUserName,
+      geoPoint: geoPoint ?? this.geoPoint,
+      title: title ?? this.title,
+    );
+  }
 }
