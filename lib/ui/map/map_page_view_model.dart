@@ -50,6 +50,7 @@ class MapPageViewModel extends Notifier<MapPageState?> {
       selectedChatRoom: null,
       selectedCategory: null,
     ));
+    generateInfoWindow();
   }
 
   ///카테고리 눌렀을때 해당 카테고리만 나오고, 색깔변경

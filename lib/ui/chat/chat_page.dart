@@ -89,6 +89,13 @@ class _ChatPageContentState extends ConsumerState<_ChatPageContent> {
                                 width: 1,
                               ),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: AppColors.lightGray,
+                                width: 1,
+                              ),
+                            ),
                           ),
                         ),
                       ),
